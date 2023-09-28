@@ -1,304 +1,130 @@
 <!DOCTYPE html>
-<html lang="en" >
-
+<html>
 <head>
-  <meta charset="UTF-8">
-
-
-  <link rel="apple-touch-icon" type="image/png" href="https://cpwebassets.codepen.io/assets/favicon/apple-touch-icon-5ae1a0698dcc2402e9712f7d01ed509a57814f994c660df9f7a952f3060705ee.png" />
-
-  <meta name="apple-mobile-web-app-title" content="CodePen">
-
-  <link rel="shortcut icon" type="image/x-icon" href="https://cpwebassets.codepen.io/assets/favicon/favicon-aec34940fbc1a6e787974dcd360f2c6b63348d4b1f4e06c77743096d55480f33.ico" />
-
-  <link rel="mask-icon" type="image/x-icon" href="https://cpwebassets.codepen.io/assets/favicon/logo-pin-b4b4269c16397ad2f0f7a01bcdf513a1994f4c94b8af2f191c09eb0d601762b1.svg" color="#111" />
-
-
-
-
-  <script src="https://cpwebassets.codepen.io/assets/common/stopExecutionOnTimeout-2c7831bb44f98c1391d6a4ffda0e1fd302503391ca806e7fcc7b9b87197aec26.js"></script>
-
-
-  <title>CodePen - scattering hexagons</title>
-
-  <link rel="canonical" href="https://codepen.io/K-T/pen/OJLxzVq">
-
-
-
-
+  <title>Hexagon Border</title>
   <style>
-    html, body{
-      width: 100%;
-      height: 100%;
+    body, html {
       margin: 0;
       padding: 0;
-      overflow: hidden;
-    }
-    .container{
-      width: 100%;
-      height: 100%;
-      margin: 0;
-      padding: 0;
-      background-color: #000000;
+      overflow: hidden; /* Entfernt das Scrollen */
     }
   </style>
-
-  <script>
-    window.console = window.console || function(t) {};
-  </script>
-
-
-
 </head>
+<body>
+<canvas id="hexagonCanvas"></canvas>
+<script>
+  var canvas = document.getElementById("hexagonCanvas");
+  var context = canvas.getContext("2d");
 
-<body translate="no">
-<div id="jsi-hex-container" class="container"></div>
-<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js'></script>
-<script id="rendered-js" >
-  var RENDERER = {
-    RESIZE_INTERVAL: 30,
-    RADIUS: 25,
-    RATE: 0.98,
+  var hexagonRadius = 30;
+  var hexagonWidth = Math.sqrt(3) * hexagonRadius;
+  var hexagonHeight = 2 * hexagonRadius;
+  var hexagonVerticalSpacing = hexagonHeight * 0.75;
+  var hexagonHorizontalSpacing = hexagonWidth;
 
-    init: function () {
-      this.setParameters();
-      this.setup();
-      this.reconstructMethods();
-      this.bindEvent();
-      this.render();
-    },
-    setParameters: function () {
-      this.$window = $(window);
-      this.$container = $('#jsi-hex-container');
-      this.$canvas = $('<canvas />');
-      this.context = this.$canvas.appendTo(this.$container).get(0).getContext('2d');
-      this.hexagons = [];
-      this.resizeIds = [];
-    },
-    setup: function () {
-      this.hexagons.length = 0;
-      this.resizeIds.length = 0;
-      this.width = this.$container.width();
-      this.height = this.$container.height();
-      this.$canvas.attr({ width: this.width, height: this.height });
-      this.createHexagons();
-    },
-    getRandomValue: function (min, max) {
-      return min + (max - min) * Math.random() | 0;
-    },
-    createHexagons: function () {
-      this.radius = this.RADIUS * this.RATE;
-      this.vertices = [];
+  var borderColor = "black"; // Farbe für den Hexagon-Rand
 
-      for (var i = 0; i < 6; i++) {
-        this.vertices.push({ x: this.radius * Math.sin(Math.PI / 3 * i), y: -this.radius * Math.cos(Math.PI / 3 * i) });
+  function drawHexagon(x, y, fillColor) {
+    context.beginPath();
+    for (var i = 0; i < 6; i++) {
+      var angle = (i * 60 + 30) * Math.PI / 180;
+      var xPos = x + hexagonRadius * Math.cos(angle);
+      var yPos = y + hexagonRadius * Math.sin(angle);
+      if (i === 0) {
+        context.moveTo(xPos, yPos);
+      } else {
+        context.lineTo(xPos, yPos);
       }
-      this.vertices.push(this.vertices[0]);
-      this.hexWidth = this.RADIUS * Math.cos(Math.PI / 6) * 2;
-      this.hexHeight = this.RADIUS * (2 - Math.sin(Math.PI / 6));
+    }
+    context.closePath();
 
-      var countX = Math.ceil(this.width / this.hexWidth) + 1,
-              countY = Math.ceil(this.height / this.hexHeight) + 1,
-              offsetX = -(countX * this.hexWidth - this.width) / 2,
-              offsetY = -(countY * this.hexHeight - this.height) / 2;
+    // Fülle das Hexagon mit der gewünschten Farbe
+    context.fillStyle = fillColor;
+    context.fill();
 
-      countX++;
+    // Zeichne den Hexagon-Rand in Schwarz
+    context.strokeStyle = borderColor;
+    context.lineWidth = 2;
+    context.stroke();
+  }
 
-      for (var y = 0; y < countY; y++) {
-        for (var x = 0; x < countX; x++) {
-          this.hexagons.push(new HEXAGON(this, offsetX + (x + 0.5) * this.hexWidth - (y % 2 == 1 ? 0 : this.hexWidth / 2), offsetY + (y + 0.5) * this.hexHeight));
+  function placeHexagons() {
+    var canvasWidth = window.innerWidth;
+    var canvasHeight = window.innerHeight;
+
+    canvas.width = canvasWidth;
+    canvas.height = canvasHeight;
+
+    var numRows = Math.ceil(canvasHeight / hexagonVerticalSpacing);
+    var numCols = Math.ceil(canvasWidth / hexagonHorizontalSpacing);
+
+    for (var row = 0; row < numRows; row++) {
+      for (var col = 0; col < numCols; col++) {
+        var x = col * hexagonHorizontalSpacing + (row % 2) * (hexagonWidth / 2);
+        var y = row * hexagonVerticalSpacing;
+
+        // Zufällig auswählen, welches Hexagon den Farbwechseleffekt haben soll
+        var shouldAnimate = Math.random() < 0.05; // Zum Beispiel 5% der Hexagons animieren
+        if (shouldAnimate) {
+          animateHexagonColor(x, y);
+        } else {
+          var fillColor = "rgb(13, 51, 85)";
+          drawHexagon(x, y, fillColor);
         }
       }
-      for (var y = 0; y < countY; y++) {
-        for (var x = 0; x < countX; x++) {
-          var hexagon = this.hexagons[y * countX + x];
+    }
+  }
 
-          if (x < countX - 1) {
-            hexagon.neighbors[0] = this.hexagons[y * countX + x + 1];
-          }
-          if ((x < countX - 1 || y % 2 == 0) && y < countY - 1) {
-            hexagon.neighbors[1] = this.hexagons[(y + 1) * countX + x + (y % 2 == 1 ? 1 : 0)];
-          }
-          if ((x > 0 || y % 2 == 1) && y < countY - 1) {
-            hexagon.neighbors[2] = this.hexagons[(y + 1) * countX + x + (y % 2 == 1 ? 0 : -1)];
-          }
-          if (x > 0) {
-            hexagon.neighbors[3] = this.hexagons[y * countX + x - 1];
-          }
-          if ((x > 0 || y % 2 == 1) && y > 0) {
-            hexagon.neighbors[4] = this.hexagons[(y - 1) * countX + x + (y % 2 == 1 ? 0 : -1)];
-          }
-          if ((x < countX - 1 || y % 2 == 0) && y > 0) {
-            hexagon.neighbors[5] = this.hexagons[(y - 1) * countX + x + (y % 2 == 1 ? 1 : 0)];
-          }
-        }
-      }
-      this.hexagons[this.getRandomValue(0, this.hexagons.length - 1)].select();
-    },
-    watchWindowSize: function () {
-      while (this.resizeIds.length > 0) {
-        clearTimeout(this.resizeIds.pop());
-      }
-      this.tmpWidth = this.$window.width();
-      this.tmpHeight = this.$window.height();
-      this.resizeIds.push(setTimeout(this.jdugeToStopResize, this.RESIZE_INTERVAL));
-    },
-    jdugeToStopResize: function () {
-      var width = this.$window.width(),
-              height = this.$window.height(),
-              stopped = width == this.tmpWidth && height == this.tmpHeight;
-
-      this.tmpWidth = width;
-      this.tmpHeight = height;
-
-      if (stopped) {
-        this.setup();
-      }
-    },
-    reconstructMethods: function () {
-      this.selectHexagon = this.selectHexagon.bind(this);
-      this.watchWindowSize = this.watchWindowSize.bind(this);
-      this.jdugeToStopResize = this.jdugeToStopResize.bind(this);
-      this.render = this.render.bind(this);
-    },
-    selectHexagon: function (event) {
-      var axis = this.getAxis(event);
-
-      for (var i = 0, count = this.hexagons.length; i < count; i++) {
-        this.hexagons[i].judge(axis.x, axis.y);
-      }
-    },
-    getAxis: function (event) {
-      var offset = this.$container.offset();
-      return { x: event.clientX - offset.left + this.$window.scrollLeft(), y: event.clientY - offset.top + this.$window.scrollTop() };
-    },
-    bindEvent: function () {
-      this.$window.on('resize', this.watchWindowSize);
-      this.$container.on('click', this.selectHexagon);
-    },
-    render: function () {
-      requestAnimationFrame(this.render);
-
-      this.context.fillStyle = 'hsla(210, 70%, 10%, 0.3)';
-      this.context.fillRect(0, 0, this.width, this.height);
-
-      for (var i = 0, count = this.hexagons.length; i < count; i++) {
-        this.hexagons[i].render(this.context);
-      }
-    } };
-
-  var HEXAGON = function (renderer, x, y) {
-    this.renderer = renderer;
-    this.x = x;
-    this.y = y;
-    this.init();
-  };
-  HEXAGON.prototype = {
-    COUNT: { MIN: 5, MAX: 50 },
-    LUMINANCE: { MIN: 10, MAX: 70 },
-
-    init: function () {
-      this.selections = [];
-      this.neighbors = new Array(6);
-      this.sourceIndices = [];
-    },
-    judge: function (x, y) {
-      if (x < this.x - this.renderer.hexWidth / 2 || x > this.x + this.renderer.hexWidth / 2 ||
-              y < this.y - this.renderer.RADIUS || y > this.y + this.renderer.RADIUS ||
-              y < this.y && Math.abs((x - this.x) / (y - this.y + this.renderer.RADIUS)) > Math.tan(Math.PI / 3) ||
-              y > this.y && Math.abs((x - this.x) / (y - this.y - this.renderer.RADIUS)) > Math.tan(Math.PI / 3)) {
-        return;
-      }
-      this.select();
-    },
-    select: function () {
-      this.hue = this.renderer.getRandomValue(100, 300);
-      this.selections.push({ count: 0, hue: this.hue });
-    },
-    relate: function (sourceIndices) {
-      this.sourceIndices.push(sourceIndices);
-    },
-    draw: function (context, targets) {
-      for (var i = 0; i < targets.length; i++) {
-        var target = targets[i],
-                fillLuminance = 0,
-                strokeLuminance = 0;
-
-        if (target.count < this.COUNT.MIN) {
-          fillLuminance = this.LUMINANCE.MIN + (this.LUMINANCE.MAX - this.LUMINANCE.MIN) * Math.pow(Math.sin(Math.PI / 2 * target.count / this.COUNT.MIN), 3);
-        } else if (target.count < this.COUNT.MAX) {
-          fillLuminance = this.LUMINANCE.MIN + (this.LUMINANCE.MAX - this.LUMINANCE.MIN) * Math.pow(Math.sin(Math.PI / 2 * (1 + (target.count - this.COUNT.MIN) / (this.COUNT.MAX - this.COUNT.MIN))), 3);
-        }
-        if (target.count < this.COUNT.MIN * 2) {
-          strokeLuminance = this.LUMINANCE.MIN + (this.LUMINANCE.MAX - this.LUMINANCE.MIN) * Math.sin(Math.PI / 2 * target.count / this.COUNT.MIN / 2);
-        } else if (target.count < this.COUNT.MAX * 2) {
-          strokeLuminance = this.LUMINANCE.MIN + (this.LUMINANCE.MAX - this.LUMINANCE.MIN) * Math.sin(Math.PI / 2 * (1 + (target.count - this.COUNT.MIN * 2) / (this.COUNT.MAX - this.COUNT.MIN) / 2));
-        }
-        context.fillStyle = 'hsla(' + target.hue + ', 70%, ' + fillLuminance + '%, 0.3)';
-        context.fill();
-        context.strokeStyle = 'hsla(' + target.hue + ', 70%, ' + strokeLuminance + '%, 0.3)';
-        context.stroke();
-      }
-    },
-    render: function (context) {
-      context.save();
-      context.globalCompositeOperation = 'lighter';
-      context.translate(this.x, this.y);
-      context.beginPath();
-
-      for (var i = 0, vertices = this.renderer.vertices; i < 6; i++) {
-        context[i == 0 ? 'moveTo' : 'lineTo'](vertices[i].x, vertices[i].y);
-      }
-      context.closePath();
-      context.fillStyle = 'hsla(210, 70%, ' + this.LUMINANCE.MIN + '%, 0.3)';
-      context.fill();
-
-      this.draw(context, this.selections);
-      this.draw(context, this.sourceIndices);
-      context.restore();
-
-      for (var i = this.selections.length - 1; i >= 0; i--) {
-        var selection = this.selections[i];
-
-        if (selection.count == this.COUNT.MIN) {
-          for (var j = 0; j < 6; j++) {
-            if (this.neighbors[j]) {
-              var indices = [];
-
-              for (var k = 0; k < 3; k++) {
-                var index = j - 1 + k;
-                index += 6;
-                index %= 6;
-                indices.push(index);
-              }
-              this.neighbors[j].relate({ indices: indices, hue: this.hue, count: 0 });
-            }
-          }
-        }
-        if (++selection.count == this.COUNT.MAX * 2) {
-          this.selections.splice(i, 1);
-        }
-      }
-      for (var i = this.sourceIndices.length - 1; i >= 0; i--) {
-        var indices = this.sourceIndices[i],
-                index = indices.indices[this.renderer.getRandomValue(0, 3)];
-
-        if (this.neighbors[index] && indices.count == this.COUNT.MIN) {
-          this.neighbors[index].relate({ indices: indices.indices, hue: indices.hue, count: 0 });
-        }
-        if (++indices.count == this.COUNT.MAX * 2) {
-          this.sourceIndices.splice(i, 1);
-        }
-      }
-    } };
-
-  $(function () {
-    RENDERER.init();
+  window.addEventListener("resize", function () {
+    placeHexagons();
   });
-  //# sourceURL=pen.js
+
+  placeHexagons();
+
+  var animationSpeed = 2000; // Ändern Sie die Geschwindigkeit der Farbänderung hier (in Millisekunden)
+
+  function animateHexagonColor(x, y) {
+    var currentTime = new Date().getTime();
+    var color = "rgb(" + Math.sin(currentTime / animationSpeed) * 128 + 128 + ", " + Math.sin(currentTime / animationSpeed + 2) * 128 + 128 + ", " + Math.sin(currentTime / animationSpeed + 4) * 128 + 128 + ")";
+
+    drawHexagon(x, y, color); // Zeichnen Sie das animierte Hexagon mit der aktualisierten Farbe
+    requestAnimationFrame(function () {
+      animateHexagonColor(x, y);
+    }); // Fortsetzen der Animation für das ausgewählte Hexagon
+
+    setTimeout(function () {
+      // Hier den Code einfügen, um die Animation auf alle benachbarten Hexagons auszudehnen.
+      var neighbors = findNeighbors(x, y);
+      neighbors.forEach(function (neighbor) {
+        animateHexagonColor(neighbor.x, neighbor.y);
+      });
+    }, 5000); // 5000 Millisekunden (5 Sekunden) Verzögerung
+  }
+
+  // Funktion zum Finden der benachbarten Hexagons
+  function findNeighbors(x, y) {
+    var neighbors = [];
+    // Hier können Sie die Logik implementieren, um die Nachbarn basierend auf den Hexagon-Koordinaten zu finden.
+    // Ein Beispiel: Rechts, Links, Oben rechts, Oben links, Unten rechts, Unten links.
+    neighbors.push({ x: x + hexagonHorizontalSpacing, y: y }); // Rechts
+    neighbors.push({ x: x - hexagonHorizontalSpacing, y: y }); // Links
+
+    if (row % 2 === 0) {
+      neighbors.push({ x: x + hexagonWidth / 2, y: y - hexagonVerticalSpacing }); // Oben rechts
+      neighbors.push({ x: x - hexagonWidth / 2, y: y - hexagonVerticalSpacing }); // Oben links
+      neighbors.push({ x: x + hexagonWidth / 2, y: y + hexagonVerticalSpacing }); // Unten rechts
+      neighbors.push({ x: x - hexagonWidth / 2, y: y + hexagonVerticalSpacing }); // Unten links
+    } else {
+      neighbors.push({ x: x + hexagonWidth / 2, y: y + hexagonVerticalSpacing }); // Unten rechts
+      neighbors.push({ x: x - hexagonWidth / 2, y: y + hexagonVerticalSpacing }); // Unten links
+      neighbors.push({ x: x + hexagonWidth / 2, y: y - hexagonVerticalSpacing }); // Oben rechts
+      neighbors.push({ x: x - hexagonWidth / 2, y: y - hexagonVerticalSpacing }); // Oben links
+    }
+
+    return neighbors;
+  }
+
 </script>
-
-
 </body>
-
 </html>
+
