@@ -24,7 +24,7 @@
 
   var borderColor = "black"; // Farbe für den Hexagon-Rand
 
-  function drawHexagon(x, y, fillColor) {
+  function drawHexagon(x, y, fillColor, borderColor) {
     context.beginPath();
     for (var i = 0; i < 6; i++) {
       var angle = (i * 60 + 30) * Math.PI / 180;
@@ -42,7 +42,7 @@
     context.fillStyle = fillColor;
     context.fill();
 
-    // Zeichne den Hexagon-Rand in Schwarz
+    // Zeichne den Hexagon-Rand in der angegebenen Farbe
     context.strokeStyle = borderColor;
     context.lineWidth = 2;
     context.stroke();
@@ -62,18 +62,42 @@
     var extraCols = Math.ceil((canvasWidth % hexagonHorizontalSpacing) / hexagonWidth);
     var extraRows = Math.ceil((canvasHeight % hexagonVerticalSpacing) / (hexagonHeight * 0.25));
 
-    for (var row = 0; row < numRows + extraRows; row++) {
-      for (var col = 0; col < numCols + extraCols; col++) {
+    // Erhöhen Sie die Anzahl der Hexagons an den Rändern, um den weißen Rand zu verbergen
+    numRows += 2;
+    numCols += 2;
+    extraCols += 2;
+    extraRows += 2;
+
+    var animatedHexagons = [];
+
+    for (var row = 0; row < numRows; row++) {
+      for (var col = 0; col < numCols; col++) {
         var x = col * hexagonHorizontalSpacing + (row % 2) * (hexagonWidth / 2);
         var y = row * hexagonVerticalSpacing;
 
-        // Zufällig auswählen, welches Hexagon den Farbwechseleffekt haben soll
-        var shouldAnimate = Math.random() < 0.05; // Zum Beispiel 5% der Hexagons animieren
+        // Überprüfen Sie, ob in der Nähe animierte Hexagons vorhanden sind
+        var hasNearbyAnimation = false;
+        for (var i = 0; i < animatedHexagons.length; i++) {
+          var animatedHexagon = animatedHexagons[i];
+          var distance = Math.sqrt(Math.pow(x - animatedHexagon.x, 2) + Math.pow(y - animatedHexagon.y, 2));
+          if (distance < hexagonWidth) {
+            hasNearbyAnimation = true;
+            break;
+          }
+        }
+
+        // Zufällig auswählen, welches Hexagon den Farbwechseleffekt haben soll, wenn keine Animation in der Nähe ist
+        var shouldAnimate = !hasNearbyAnimation && Math.random() < 0.02; // Zum Beispiel 2% der Hexagons animieren
+
         if (shouldAnimate) {
-          animateHexagonColor(x, y);
+          animateHexagonColor(x, y, animatedHexagons);
         } else {
           var fillColor = "rgb(13, 51, 85)";
-          drawHexagon(x, y, fillColor);
+          drawHexagon(x, y, fillColor, borderColor);
+        }
+
+        if (shouldAnimate) {
+          animatedHexagons.push({ x: x, y: y });
         }
       }
     }
@@ -85,45 +109,73 @@
 
   placeHexagons();
 
-  var animationSpeed = 2000; // Ändern Sie die Geschwindigkeit der Farbänderung hier (in Millisekunden)
+  var animationSpeed = 2000; // Ändern Sie die Geschwindigkeit der Randfarbänderung hier (in Millisekunden)
 
-  function animateHexagonColor(x, y) {
+  function animateHexagonColor(x, y, animatedHexagons) {
     var currentTime = new Date().getTime();
     var color = "rgb(" + Math.sin(currentTime / animationSpeed) * 128 + 128 + ", " + Math.sin(currentTime / animationSpeed + 2) * 128 + 128 + ", " + Math.sin(currentTime / animationSpeed + 4) * 128 + 128 + ")";
 
-    drawHexagon(x, y, color); // Zeichnen Sie das animierte Hexagon mit der aktualisierten Farbe
+    drawHexagon(x, y, "rgb(13, 51, 85)", color); // Zeichnen Sie das Hexagon mit aktualisierter Randfarbe
+
     requestAnimationFrame(function () {
-      animateHexagonColor(x, y);
-    }); // Fortsetzen der Animation für das ausgewählte Hexagon
+      animateHexagonColor(x, y, animatedHexagons);
+    });
+
+    // ...
 
     setTimeout(function () {
-      // Hier den Code einfügen, um die Animation auf alle benachbarten Hexagons auszudehnen.
       var neighbors = findNeighbors(x, y);
-      neighbors.forEach(function (neighbor) {
-        animateHexagonColor(neighbor.x, neighbor.y);
+
+      console.log("Alle Nachbarn:", neighbors);
+
+      // Filtern Sie die Nachbarn, die nicht bereits animiert sind
+      var nonAnimatedNeighbors = neighbors.filter(function (neighbor) {
+        return !animatedHexagons.some(function (animatedHexagon) {
+          return animatedHexagon.x === neighbor.x && animatedHexagon.y === neighbor.y;
+        });
       });
-    }, 5000); // 5000 Millisekunden (5 Sekunden) Verzögerung
+
+      console.log("Nicht animierte Nachbarn:", nonAnimatedNeighbors);
+
+      // Wählen Sie einen zufälligen Nachbarn aus den nicht animierten Nachbarn aus
+      var randomNeighbor = nonAnimatedNeighbors[Math.floor(Math.random() * nonAnimatedNeighbors.length)];
+
+      console.log("Ausgewählter Nachbar:", randomNeighbor);
+
+      if (randomNeighbor) {
+        animateHexagonColor(randomNeighbor.x, randomNeighbor.y, animatedHexagons); // Starten Sie die Animation beim ausgewählten Nachbarn
+        animatedHexagons.push(randomNeighbor); // Markieren Sie den ausgewählten Nachbarn als animiert
+      }
+    }, 5000);
+
+// ...
+
   }
 
   // Funktion zum Finden der benachbarten Hexagons
   function findNeighbors(x, y) {
     var neighbors = [];
-    // Hier können Sie die Logik implementieren, um die Nachbarn basierend auf den Hexagon-Koordinaten zu finden.
-    // Ein Beispiel: Rechts, Links, Oben rechts, Oben links, Unten rechts, Unten links.
-    neighbors.push({ x: x + hexagonHorizontalSpacing, y: y }); // Rechts
-    neighbors.push({ x: x - hexagonHorizontalSpacing, y: y }); // Links
 
-    if (row % 2 === 0) {
-      neighbors.push({ x: x + hexagonWidth / 2, y: y - hexagonVerticalSpacing }); // Oben rechts
-      neighbors.push({ x: x - hexagonWidth / 2, y: y - hexagonVerticalSpacing }); // Oben links
-      neighbors.push({ x: x + hexagonWidth / 2, y: y + hexagonVerticalSpacing }); // Unten rechts
-      neighbors.push({ x: x - hexagonWidth / 2, y: y + hexagonVerticalSpacing }); // Unten links
-    } else {
-      neighbors.push({ x: x + hexagonWidth / 2, y: y + hexagonVerticalSpacing }); // Unten rechts
-      neighbors.push({ x: x - hexagonWidth / 2, y: y + hexagonVerticalSpacing }); // Unten links
-      neighbors.push({ x: x + hexagonWidth / 2, y: y - hexagonVerticalSpacing }); // Oben rechts
-      neighbors.push({ x: x - hexagonWidth / 2, y: y - hexagonVerticalSpacing }); // Oben links
-    }
+    var dx = hexagonWidth * 1.0; // Anpassen Sie diesen Wert, um den horizontalen Abstand zu ändern
+    var dy = hexagonHeight * 0.75; // Anpassen Sie diesen Wert, um den vertikalen Abstand zu ändern
+
+    // Rechts
+    neighbors.push({ x: x + dx, y: y });
+
+    // Links
+    neighbors.push({ x: x - dx, y: y });
+
+    // Oben rechts
+    neighbors.push({ x: x + dx / 2, y: y - dy });
+
+    // Oben links
+    neighbors.push({ x: x - dx / 2, y: y - dy });
+
+    // Unten rechts
+    neighbors.push({ x: x + dx / 2, y: y + dy });
+
+    // Unten links
+    neighbors.push({ x: x - dx / 2, y: y + dy });
 
     return neighbors;
   }
