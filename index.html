@@ -58,8 +58,12 @@
     var numRows = Math.ceil(canvasHeight / hexagonVerticalSpacing);
     var numCols = Math.ceil(canvasWidth / hexagonHorizontalSpacing);
 
-    for (var row = 0; row < numRows; row++) {
-      for (var col = 0; col < numCols; col++) {
+    // Berechnen Sie die Anzahl der zusätzlichen Hexagone, um die Ränder zu füllen
+    var extraCols = Math.ceil((canvasWidth % hexagonHorizontalSpacing) / hexagonWidth);
+    var extraRows = Math.ceil((canvasHeight % hexagonVerticalSpacing) / (hexagonHeight * 0.25));
+
+    for (var row = 0; row < numRows + extraRows; row++) {
+      for (var col = 0; col < numCols + extraCols; col++) {
         var x = col * hexagonHorizontalSpacing + (row % 2) * (hexagonWidth / 2);
         var y = row * hexagonVerticalSpacing;
 
