@@ -70,7 +70,7 @@ function placeHexagonsAfterwards(placedHexagons) {
     var whiteHexagonRadius = 30; // Anpassen Sie den Radius nach Bedarf
 
 // Zeichnen Sie das weiße Hexagon
-    drawWhiteHexagon(whiteHexagonX, whiteHexagonY, whiteHexagonRadius);
+    //drawWhiteHexagon(whiteHexagonX, whiteHexagonY, whiteHexagonRadius);
 }
 
 function placeHexagonsOnStart(placedHexagons) {
@@ -124,9 +124,11 @@ function placeHexagonsOnStart(placedHexagons) {
 
 window.addEventListener("resize", function () {
     placeHexagonsAfterwards();
+    drawNavbar(whiteHexagonX, whiteHexagonY);
 });
 
 placeHexagonsOnStart();
+drawNavbar(whiteHexagonX, whiteHexagonY);
 
 var animationSpeed = 2000; // Ändern Sie die Geschwindigkeit der Randfarbänderung hier (in Millisekunden)
 
@@ -240,34 +242,189 @@ function findNeighbors(x, y) {
 // ... (Ihr bestehender Code)
 
 // Funktion zum Zeichnen eines weißen Hexagons
-function drawWhiteHexagon(x, y, radius) {
+function drawWhiteHexagon(x, y, borderSides) {
+    var radius = 30; // Radius des Hexagons
     context.beginPath();
+
+    // Berechnung der sechs Eckpunkte des Hexagons
     for (var i = 0; i < 6; i++) {
         var angle = (i * 60 + 30) * Math.PI / 180;
         var xPos = x + radius * Math.cos(angle);
         var yPos = y + radius * Math.sin(angle);
-        if (i === 0) {
-            context.moveTo(xPos, yPos);
-        } else {
-            context.lineTo(xPos, yPos);
+
+        context.strokeStyle = "rgb(0, 51, 102)";
+        context.lineWidth = 2;
+        context.stroke();
+
+        context.lineJoin = "round";
+
+        drawHexagon(x,y,"rgb(0, 51, 102)");
+
+// Zeichnen der Ränder basierend auf den borderSides
+        if (borderSides.left) {
+            context.lineJoin = "round";
+            context.beginPath();
+            context.lineWidth = 4;
+            context.lineHeight += 2;
+            context.lineJoin = 'round';
+            context.strokeStyle = "blue";
+            context.moveTo(x - 26, y + 16);
+            context.lineTo(x - 26, y - 16);
+            context.stroke();
+        }
+
+        if (borderSides.right) {
+            context.beginPath();
+            context.moveTo(x + 26, y - 16);
+            context.lineTo(x + 26, y + 16);
+            context.lineWidth = 4;
+            context.lineHeight += 2;
+            context.lineJoin = 'round';
+            context.strokeStyle = "blue";
+            context.stroke();
+        }
+
+        if (borderSides.topLeft) {
+            context.lineJoin = "round";
+            context.beginPath();
+            context.lineHeight = 200;
+            context.lineWidth = 4;
+            context.lineJoin = 'round';
+            context.strokeStyle = "blue";
+            context.moveTo(x, y - radius);
+            context.lineTo(x - radius * 0.87, y - radius / 2);
+            context.stroke();
+        }
+
+        if (borderSides.topRight) {
+            context.lineJoin = "round";
+            context.beginPath();
+            context.moveTo(x, y - radius);
+            context.lineTo(x + radius * 0.87, y - radius / 2);
+            context.lineWidth = 4;
+            context.lineHeight += 2;
+            context.lineJoin = 'round';
+            context.strokeStyle = "blue";
+            context.stroke();
+        }
+
+        if (borderSides.bottomLeft) {
+            context.beginPath();
+            context.moveTo(x, y + radius);
+            context.lineTo(x - radius * 0.87, y + radius / 2);
+            context.lineWidth = 4;
+            context.lineHeight += 2;
+            context.lineJoin = 'round';
+            context.strokeStyle = "blue";
+            context.stroke();
+        }
+
+        if (borderSides.bottomRight) {
+            context.beginPath();
+            context.moveTo(x, y + radius);
+            context.lineTo(x + radius * 0.87, y + radius / 2);
+            context.lineWidth = 4;
+            context.lineHeight += 2;
+            context.lineJoin = 'round';
+            context.strokeStyle = "blue";
+            context.stroke();
         }
     }
+
     context.closePath();
 
-    context.fillStyle = "white";
-    context.fill();
-    context.strokeStyle = borderColor;
-    context.lineWidth = 2;
-    context.stroke();
 }
+
+
 
 // Position und Größe des weißen Hexagons in der linken oberen Ecke
 var whiteHexagonX = 130; // Anpassen Sie die X-Koordinate nach Bedarf
 var whiteHexagonY = 135; // Anpassen Sie die Y-Koordinate nach Bedarf
-var whiteHexagonRadius = 30; // Anpassen Sie den Radius nach Bedarf
+function drawNavbar(startX, startY) {
 
-// Zeichnen Sie das weiße Hexagon
-drawWhiteHexagon(whiteHexagonX, whiteHexagonY, whiteHexagonRadius);
+    var rangeNavBar = 6;
 
-// Rest Ihres Codes...
+    // Draws Horizontal Hexagons
+    for (var a = 0; a < 6; a++) {
+        if (a == 0){ // Erstes Hexagon
+
+            var borderSides = { left: true, right: false, bottomLeft: true, bottomRight: false, topLeft: true, topRight: false };
+            drawWhiteHexagon(startX,startY, borderSides);
+            startX += 52;
+
+        }else if (a == 5){ // Letztes Hexagon
+
+            var borderSides = { left: false, right: true, bottomLeft: false, bottomRight: true, topLeft: false, topRight: true };
+            drawWhiteHexagon(startX,startY, borderSides);
+            startX += 52;
+
+        }else{
+            // Hexagons in der Mitte
+            var borderSides = { left: false, right: false, bottomLeft: false, bottomRight: false, false: false, topRight: false };
+            drawWhiteHexagon(startX, startY, borderSides);
+            startX += 52;
+
+        }
+    }
+
+    //Untere Reihe
+    startX = whiteHexagonX;
+    startY += 45;
+    startX += 25;
+    for (var i = 0; i < rangeNavBar - 1; i++) {
+
+        if (i == 0){ // Erstes Hexagon
+
+            var borderSides = { left: true, right: false, bottomLeft: true, bottomRight: true, topLeft: false, topRight: false };
+            drawWhiteHexagon(startX,startY, borderSides);
+            startX += 52;
+
+        }else if (i == 4){ // Letztes Hexagon
+
+            var borderSides = { left: false, right: true, bottomLeft: true, bottomRight: true, topLeft: false, topRight: false };
+            drawWhiteHexagon(startX,startY, borderSides);
+            startX += 52;
+
+        }else{
+            // Hexagons in der Mitte
+            var borderSides = { left: false, right: false, bottomLeft: true, bottomRight: true, topLeft: false, topRight: false };
+            drawWhiteHexagon(startX, startY, borderSides);
+            startX += 52;
+
+        }
+
+    }
+
+    //Obere Reihe
+    startX = whiteHexagonX;
+    startY -= 90;
+    startX += 25;
+    for (var i = 0; i < rangeNavBar - 1; i++) {
+
+        if (i === 0){ // Erstes Hexagon
+
+            var borderSides = { left: true, right: false, bottomLeft: false, bottomRight: false, topLeft: true, topRight: true };
+            drawWhiteHexagon(startX,startY, borderSides);
+            startX += 52;
+
+        }else if (i === 4){ // Letztes Hexagon
+
+            var borderSides = { left: false, right: true, bottomLeft: false, bottomRight: false, topLeft: true, topRight: true };
+            drawWhiteHexagon(startX,startY, borderSides);
+            startX += 52;
+
+        }else{
+            // Hexagons in der Mitte
+            var borderSides = { left: false, right: false, bottomLeft: false, bottomRight: false, topLeft: true, topRight: true };
+            drawWhiteHexagon(startX, startY, borderSides);
+            startX += 52;
+
+        }
+
+    }
+
+}
+
+drawNavbar(whiteHexagonX, whiteHexagonY);
+
 
