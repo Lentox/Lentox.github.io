@@ -260,14 +260,13 @@ function drawWhiteHexagon(x, y, borderSides) {
 
         drawHexagon(x,y,"rgb(0, 51, 102)");
 
-// Zeichnen der Ränder basierend auf den borderSides
+        // Zeichnen der Ränder basierend auf den borderSides
         if (borderSides.left) {
-            context.lineJoin = "round";
             context.beginPath();
-            context.lineWidth = 4;
-            context.lineHeight += 2;
-            context.lineJoin = 'round';
             context.strokeStyle = "blue";
+
+            // Zeichnen der Linie
+            context.lineWidth = 4;
             context.moveTo(x - 26, y + 16);
             context.lineTo(x - 26, y - 16);
             context.stroke();
@@ -275,59 +274,75 @@ function drawWhiteHexagon(x, y, borderSides) {
 
         if (borderSides.right) {
             context.beginPath();
+            context.strokeStyle = "blue";
+
+            // Zeichnen der Linie
+            context.lineWidth = 4;
             context.moveTo(x + 26, y - 16);
             context.lineTo(x + 26, y + 16);
-            context.lineWidth = 4;
-            context.lineHeight += 2;
-            context.lineJoin = 'round';
-            context.strokeStyle = "blue";
             context.stroke();
         }
 
         if (borderSides.topLeft) {
-            context.lineJoin = "round";
             context.beginPath();
-            context.lineHeight = 200;
-            context.lineWidth = 4;
-            context.lineJoin = 'round';
             context.strokeStyle = "blue";
+
+            //Zeichnen der Linie
+            context.lineWidth = 4;
             context.moveTo(x, y - radius);
             context.lineTo(x - radius * 0.87, y - radius / 2);
             context.stroke();
+
+            //Zeichnen von Punkten um Linien abzurunden
+            context.fillStyle = "blue";
+            context.lineWidth = 0;
+            context.arc(x, y - radius, 1.7, 0, 2 * Math.PI);
+            context.arc(x - radius * 0.87, y - radius / 2, 1.7, 0, 2 * Math.PI);
+            context.fill();
         }
 
         if (borderSides.topRight) {
-            context.lineJoin = "round";
             context.beginPath();
             context.moveTo(x, y - radius);
             context.lineTo(x + radius * 0.87, y - radius / 2);
             context.lineWidth = 4;
-            context.lineHeight += 2;
-            context.lineJoin = 'round';
             context.strokeStyle = "blue";
             context.stroke();
         }
 
         if (borderSides.bottomLeft) {
             context.beginPath();
+
+            // Zeichnen der Linie
             context.moveTo(x, y + radius);
             context.lineTo(x - radius * 0.87, y + radius / 2);
             context.lineWidth = 4;
-            context.lineHeight += 2;
-            context.lineJoin = 'round';
             context.strokeStyle = "blue";
             context.stroke();
+
+            // Zeichnen von Punkten um Linien abzurunden
+            context.fillStyle = "blue";
+            context.lineWidth = 0;
+            context.arc(x, y + radius, 1.7, 0, 2 * Math.PI);
+            context.arc(x - radius * 0.87, y + radius / 2, 1.7, 0, 2 * Math.PI);
+            context.fill();
         }
 
         if (borderSides.bottomRight) {
             context.beginPath();
+
+            // Zeichnen der Linie
             context.moveTo(x, y + radius);
             context.lineTo(x + radius * 0.87, y + radius / 2);
             context.lineWidth = 4;
-            context.lineHeight += 2;
-            context.lineJoin = 'round';
             context.strokeStyle = "blue";
             context.stroke();
+            // Zeichnen von Punkten um Linien abzurunden
+            context.fillStyle = "blue";
+            context.lineWidth = 0;
+            context.arc(x, y + radius, 1.7, 0, 2 * Math.PI);
+            context.arc(x + radius * 0.87, y + radius / 2, 1.7, 0, 2 * Math.PI);
+            context.fill();
         }
     }
 
