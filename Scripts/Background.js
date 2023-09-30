@@ -158,7 +158,7 @@ function placeHexagonsOnStart() {
                 if (shouldAnimateCheck(x,y)){
                     animateHexagonColor(x, y, animatedHexagons);
                 }else{
-                    drawHexagon(x, y, "rgb(13, 51, 85)", borderColor);
+                    drawHexagon(x, y, "yellow", "yellow" );
                 }
             } else {
                 drawHexagon(x, y, "rgb(13, 51, 85)", borderColor);
@@ -556,10 +556,12 @@ window.addEventListener("resize", function () {
 function shouldAnimateCheck(x, y){
     for (var i = 0; i < staticHexagone.length; i++){
         //Könnte falsch sein
-        if (x >= staticHexagone.x + 5 && x <= staticHexagone.x - 5 && y >= staticHexagone.y + 5 && y <= staticHexagone.y - 5){
-            return false;
-        }else{
+        if (x >= staticHexagone.x - 5 && x <= staticHexagone.x + 5 && y >= staticHexagone.y - 5 && y <= staticHexagone.y + 5) {
+            drawHexagon(x,y,"red","red");
             return true;
+        } else {
+            return false;
+            drawHexagon(x,y,"green","green");
         }
     }
     // Wenn true wird Hexagon animiert
