@@ -9,10 +9,3 @@ body, html {
     top: 0;
     left: 0;
 }
-
-/* Zusätzlicher Stil für das weiße Hexagon */
-.white-hexagon {
-    position: absolute;
-    top: 0;
-    left: 0;
-}

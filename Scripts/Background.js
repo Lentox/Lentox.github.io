@@ -11,6 +11,59 @@ const hexagonHorizontalSpacing = hexagonWidth;
 const borderColor = "black";
 //endregion
 
+// Position und Größe des weißen Hexagons in der linken oberen Ecke
+const whiteHexagonX = 130; // Anpassen Sie die X-Koordinate nach Bedarf
+const whiteHexagonY = 135; // Anpassen Sie die Y-Koordinate nach Bedarf
+var animationSpeed = 2000; // Ändern Sie die Geschwindigkeit der Randfarbänderung hier (in Millisekunden)
+
+//Punkte an denen keine Hexagone spawnen dürfen
+function createStaticHexagone(startX, startY) {
+    var staticHexagone = [];
+    staticHexagone.push(whiteHexagonX - 52, whiteHexagonY);
+    staticHexagone.push(whiteHexagonX - 25, whiteHexagonY - 45);
+    staticHexagone.push(whiteHexagonX, whiteHexagonY - 90);
+    staticHexagone.push(whiteHexagonX + 52, whiteHexagonY - 90);
+    staticHexagone.push(whiteHexagonX + 104, whiteHexagonY - 90);
+    staticHexagone.push(whiteHexagonX + 156, whiteHexagonY - 90);
+    staticHexagone.push(whiteHexagonX + 208, whiteHexagonY - 90);
+    staticHexagone.push(whiteHexagonX + 260, whiteHexagonY - 90);
+    staticHexagone.push(whiteHexagonX + 286, whiteHexagonY - 45);
+    staticHexagone.push(whiteHexagonX + 312, whiteHexagonY);
+    staticHexagone.push(whiteHexagonX + 286, whiteHexagonY + 45);
+    staticHexagone.push(whiteHexagonX + 260, whiteHexagonY + 90);
+    staticHexagone.push(whiteHexagonX + 208, whiteHexagonY + 90);
+    staticHexagone.push(whiteHexagonX + 156, whiteHexagonY + 90);
+    staticHexagone.push(whiteHexagonX + 104, whiteHexagonY + 90);
+    staticHexagone.push(whiteHexagonX + 52, whiteHexagonY + 90);
+    staticHexagone.push(whiteHexagonX, whiteHexagonY + 90);
+    staticHexagone.push(whiteHexagonX - 25, whiteHexagonY + 45);
+
+    function drawAndPushHexagon(startX,startY) {
+        staticHexagone.push(startX, startY);
+        startX += 52;
+    }
+
+    for (let a = 0; a < 6; a++) {
+        drawAndPushHexagon();
+    }
+
+    startY += 45;
+    startX = whiteHexagonX + 25;
+
+    for (let a = 0; a < 5; a++) {
+        drawAndPushHexagon();
+    }
+
+    startY -= 90;
+    startX = whiteHexagonX + 25;
+
+    for (let a = 0; a < 5; a++) {
+        drawAndPushHexagon();
+    }
+
+    return staticHexagone;
+}
+
 // Zeichnen eines Hexagons
 function drawHexagon(x, y, fillColor, borderColor) {
     context.beginPath();
@@ -102,10 +155,13 @@ function placeHexagonsOnStart() {
             const shouldAnimate = !hasNearbyAnimation && Math.random() < 0.02; // 2 % der Fläsche bzw. Hexagons animieren
 
             if (shouldAnimate) {
-                animateHexagonColor(x, y, animatedHexagons);
+                if (shouldAnimateCheck(x,y)){
+                    animateHexagonColor(x, y, animatedHexagons);
+                }else{
+                    drawHexagon(x, y, "rgb(13, 51, 85)", borderColor);
+                }
             } else {
                 drawHexagon(x, y, "rgb(13, 51, 85)", borderColor);
-                //placedHexagons.push({x: x,y: y},{neighbours: findNeighbors(x,y)},{isAnimated: false});
             }
 
             if (shouldAnimate) {
@@ -114,21 +170,6 @@ function placeHexagonsOnStart() {
         }
     }
 }
-
-
-// Position und Größe des weißen Hexagons in der linken oberen Ecke
-const whiteHexagonX = 130; // Anpassen Sie die X-Koordinate nach Bedarf
-const whiteHexagonY = 135; // Anpassen Sie die Y-Koordinate nach Bedarf
-var animationSpeed = 2000; // Ändern Sie die Geschwindigkeit der Randfarbänderung hier (in Millisekunden)
-
-// Wird beim Resize vom Window aufgerufen
-window.addEventListener("resize", function () {
-    placeHexagonsAfterwards();
-    drawNavbar(whiteHexagonX, whiteHexagonY);
-});
-
-placeHexagonsOnStart();
-drawNavbar(whiteHexagonX, whiteHexagonY);
 
 // Für Fade-Effekt
 function animateHexagonColor(x, y, animatedHexagons) {
@@ -365,6 +406,7 @@ function drawNavbar(startX, startY) {
                 topLeft: true,
                 topRight: false
             };
+            staticHexagone.push(startX,startY);
             drawWhiteHexagon(startX, startY, borderSides);
             startX += 52;
 
@@ -378,6 +420,7 @@ function drawNavbar(startX, startY) {
                 topLeft: false,
                 topRight: true
             };
+            staticHexagone.push(startX,startY);
             drawWhiteHexagon(startX, startY, borderSides);
             startX += 52;
 
@@ -391,6 +434,7 @@ function drawNavbar(startX, startY) {
                 false: false,
                 topRight: false
             };
+            staticHexagone.push(startX,startY);
             drawWhiteHexagon(startX, startY, borderSides);
             startX += 52;
 
@@ -413,6 +457,7 @@ function drawNavbar(startX, startY) {
                 topLeft: false,
                 topRight: false
             };
+            staticHexagone.push(startX,startY);
             drawWhiteHexagon(startX, startY, borderSides);
             startX += 52;
 
@@ -426,6 +471,7 @@ function drawNavbar(startX, startY) {
                 topLeft: false,
                 topRight: false
             };
+            staticHexagone.push(startX,startY);
             drawWhiteHexagon(startX, startY, borderSides);
             startX += 52;
 
@@ -439,6 +485,7 @@ function drawNavbar(startX, startY) {
                 topLeft: false,
                 topRight: false
             };
+            staticHexagone.push(startX,startY);
             drawWhiteHexagon(startX, startY, borderSides);
             startX += 52;
 
@@ -462,6 +509,7 @@ function drawNavbar(startX, startY) {
                 topLeft: true,
                 topRight: true
             };
+            staticHexagone.push(startX,startY);
             drawWhiteHexagon(startX, startY, borderSides);
             startX += 52;
 
@@ -475,6 +523,7 @@ function drawNavbar(startX, startY) {
                 topLeft: true,
                 topRight: true
             };
+            staticHexagone.push(startX,startY);
             drawWhiteHexagon(startX, startY, borderSides);
             startX += 52;
 
@@ -488,6 +537,7 @@ function drawNavbar(startX, startY) {
                 topLeft: true,
                 topRight: true
             };
+            staticHexagone.push(startX,startY);
             drawWhiteHexagon(startX, startY, borderSides);
             startX += 52;
 
@@ -497,6 +547,25 @@ function drawNavbar(startX, startY) {
 
 }
 
+// Wird beim Resize vom Window aufgerufen
+window.addEventListener("resize", function () {
+    placeHexagonsAfterwards();
+    drawNavbar(whiteHexagonX, whiteHexagonY);
+});
+
+function shouldAnimateCheck(x, y){
+    for (var i = 0; i < staticHexagone.length; i++){
+        //Könnte falsch sein
+        if (x >= staticHexagone.x + 5 && x <= staticHexagone.x - 5 && y >= staticHexagone.y + 5 && y <= staticHexagone.y - 5){
+            return false;
+        }else{
+            return true;
+        }
+    }
+    // Wenn true wird Hexagon animiert
+    //return true;
+}
+
+var staticHexagone = createStaticHexagone(whiteHexagonX,whiteHexagonY);
+placeHexagonsOnStart();
 drawNavbar(whiteHexagonX, whiteHexagonY);
-
-
