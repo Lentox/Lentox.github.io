@@ -1,7 +1,7 @@
-//region Festlegen der Werte
 const canvas = document.getElementById("hexagonCanvas");
 const context = canvas.getContext("2d");
 
+// Properties
 const hexagonRadius = 30;
 const hexagonWidth = Math.sqrt(3) * hexagonRadius;
 const hexagonHeight = 2 * hexagonRadius;
@@ -9,565 +9,293 @@ const hexagonVerticalSpacing = hexagonHeight * 0.75;
 const hexagonHorizontalSpacing = hexagonWidth;
 
 const borderColor = "black";
-//endregion
+const fillColor = "rgb(13, 51, 85)";
 
-// Position und Größe des weißen Hexagons in der linken oberen Ecke
-const whiteHexagonX = 130; // Anpassen Sie die X-Koordinate nach Bedarf
-const whiteHexagonY = 135; // Anpassen Sie die Y-Koordinate nach Bedarf
-var animationSpeed = 2000; // Ändern Sie die Geschwindigkeit der Randfarbänderung hier (in Millisekunden)
+let hexagoneArray = [];
 
-//Punkte an denen keine Hexagone spawnen dürfen
-function createStaticHexagone(startX, startY) {
-    var staticHexagone = [];
-    staticHexagone.push(whiteHexagonX - 52, whiteHexagonY);
-    staticHexagone.push(whiteHexagonX - 25, whiteHexagonY - 45);
-    staticHexagone.push(whiteHexagonX, whiteHexagonY - 90);
-    staticHexagone.push(whiteHexagonX + 52, whiteHexagonY - 90);
-    staticHexagone.push(whiteHexagonX + 104, whiteHexagonY - 90);
-    staticHexagone.push(whiteHexagonX + 156, whiteHexagonY - 90);
-    staticHexagone.push(whiteHexagonX + 208, whiteHexagonY - 90);
-    staticHexagone.push(whiteHexagonX + 260, whiteHexagonY - 90);
-    staticHexagone.push(whiteHexagonX + 286, whiteHexagonY - 45);
-    staticHexagone.push(whiteHexagonX + 312, whiteHexagonY);
-    staticHexagone.push(whiteHexagonX + 286, whiteHexagonY + 45);
-    staticHexagone.push(whiteHexagonX + 260, whiteHexagonY + 90);
-    staticHexagone.push(whiteHexagonX + 208, whiteHexagonY + 90);
-    staticHexagone.push(whiteHexagonX + 156, whiteHexagonY + 90);
-    staticHexagone.push(whiteHexagonX + 104, whiteHexagonY + 90);
-    staticHexagone.push(whiteHexagonX + 52, whiteHexagonY + 90);
-    staticHexagone.push(whiteHexagonX, whiteHexagonY + 90);
-    staticHexagone.push(whiteHexagonX - 25, whiteHexagonY + 45);
+const navBarSize = 7;
 
-    function drawAndPushHexagon(startX,startY) {
-        staticHexagone.push(startX, startY);
-        startX += 52;
+const animationSpeed = 2000; // Ändern der Geschwindigkeit der Randfarbänderung hier (in Millisekunden)
+
+// Klassen
+class Hexagon {
+    constructor(x, y, row, col, radius, fillColor, borderColor, isStatic, hasAnimation, neighbours) {
+        this.x = x;
+        this.y = y;
+        this.row = row;
+        this.col = col;
+        this.isStatic = isStatic;
+        this.hasAnimation = hasAnimation;
+        this.radius = radius;
+        this.fillColor = fillColor;
+        this.borderColor = borderColor;
+        this.neighbours = neighbours;
+        this.borderSegments = [];
     }
-
-    for (let a = 0; a < 6; a++) {
-        drawAndPushHexagon();
-    }
-
-    startY += 45;
-    startX = whiteHexagonX + 25;
-
-    for (let a = 0; a < 5; a++) {
-        drawAndPushHexagon();
-    }
-
-    startY -= 90;
-    startX = whiteHexagonX + 25;
-
-    for (let a = 0; a < 5; a++) {
-        drawAndPushHexagon();
-    }
-
-    return staticHexagone;
-}
-
-// Zeichnen eines Hexagons
-function drawHexagon(x, y, fillColor, borderColor) {
-    context.beginPath();
-    for (let i = 0; i < 6; i++) {
-        const angle = (i * 60 + 30) * Math.PI / 180;
-        const xPos = x + hexagonRadius * Math.cos(angle);
-        const yPos = y + hexagonRadius * Math.sin(angle);
-        if (i === 0) {
-            context.moveTo(xPos, yPos);
-        } else {
-            context.lineTo(xPos, yPos);
-        }
-    }
-    context.closePath();
-
-    // Fülle das Hexagon mit der gewünschten Farbe
-    context.fillStyle = fillColor;
-    context.fill();
-
-    // Zeichne den Hexagon-Rand in der angegebenen Farbe
-    context.strokeStyle = borderColor;
-    context.lineWidth = 2;
-    context.stroke();
-
-}
-
-// Platzieren weiterer Hexagone, wenn WindowResize
-function placeHexagonsAfterwards() {
-    const canvasWidth = window.innerWidth;
-    const canvasHeight = window.innerHeight;
-
-    canvas.width = canvasWidth;
-    canvas.height = canvasHeight;
-
-    let numRows = Math.ceil(canvasHeight / hexagonVerticalSpacing);
-    let numCols = Math.ceil(canvasWidth / hexagonHorizontalSpacing);
-
-    // Um einen weißen rand zu vermeiden
-    numRows += 2;
-    numCols += 2;
-
-    // Zeichnen von Hexagons
-    for (let row = 0; row < numRows; row++) {
-        for (let col = 0; col < numCols; col++) {
-
-            const x = col * hexagonHorizontalSpacing + (row % 2) * (hexagonWidth / 2);
-            const y = row * hexagonVerticalSpacing;
-
-            const fillColor = "rgb(13, 51, 85)";
-            drawHexagon(x, y, fillColor, borderColor);
-        }
-    }
-}
-
-// Platzieren der Hexagone für Hintergrund beim Aufruf der Website
-function placeHexagonsOnStart() {
-    const canvasWidth = window.innerWidth;
-    const canvasHeight = window.innerHeight;
-
-    canvas.width = canvasWidth;
-    canvas.height = canvasHeight;
-
-    let numRows = Math.ceil(canvasHeight / hexagonVerticalSpacing);
-    let numCols = Math.ceil(canvasWidth / hexagonHorizontalSpacing);
-
-    // Erhöhen von Anzahl Hexagons um einen weißen Rand zu vermeiden
-    numRows += 2;
-    numCols += 2;
-
-    const animatedHexagons = [];
-
-    for (let row = 0; row < numRows; row++) {
-        for (let col = 0; col < numCols; col++) {
-            const x = col * hexagonHorizontalSpacing + (row % 2) * (hexagonWidth / 2);
-            const y = row * hexagonVerticalSpacing;
-
-            // Überprüfen Sie, ob in der Nähe animierte Hexagons vorhanden sind
-            let hasNearbyAnimation = false;
-            for (let i = 0; i < animatedHexagons.length; i++) {
-                const animatedHexagon = animatedHexagons[i];
-                const distance = Math.sqrt(Math.pow(x - animatedHexagon.x, 2) + Math.pow(y - animatedHexagon.y, 2));
-                if (distance < hexagonWidth) {
-                    hasNearbyAnimation = true;
-                    break;
-                }
-            }
-
-            // Zufällig auswählen, welches Hexagon den Farbwechseleffekt haben soll, wenn keine Animation in der Nähe ist
-            const shouldAnimate = !hasNearbyAnimation && Math.random() < 0.02; // 2 % der Fläsche bzw. Hexagons animieren
-
-            if (shouldAnimate) {
-                if (shouldAnimateCheck(x,y)){
-                    animateHexagonColor(x, y, animatedHexagons);
-                }else{
-                    drawHexagon(x, y, "yellow", "yellow" );
-                }
+    draw(){
+        context.beginPath();
+        for (let i = 0; i < 7; i++) {
+            const angle = (i * 60 + 30) * Math.PI / 180;
+            const xPos = this.x + this.radius * Math.cos(angle);
+            const yPos = this.y + this.radius * Math.sin(angle);
+            if (i === 0) {
+                context.moveTo(xPos, yPos);
             } else {
-                drawHexagon(x, y, "rgb(13, 51, 85)", borderColor);
+                context.lineTo(xPos, yPos);
             }
-
-            if (shouldAnimate) {
-                animatedHexagons.push({x: x, y: y});
-            }
-        }
-    }
-}
-
-// Für Fade-Effekt
-function animateHexagonColor(x, y, animatedHexagons) {
-
-    const currentTime = new Date().getTime();
-    const color = "rgb(" + Math.sin(currentTime / animationSpeed) * 128 + 128 + ", " + Math.sin(currentTime / animationSpeed + 2) * 128 + 128 + ", " + Math.sin(currentTime / animationSpeed + 4) * 128 + 128 + ")";
-
-    requestAnimationFrame(function () {
-        drawHexagon(x, y, "rgb(13, 51, 85)", color); // Immer wieder erneutes Zeichnen der Ränder um Fade-Effekt zu erzielen
-        changeColors(x, y, 2);
-    });
-
-    setTimeout(function () {
-        // FNachbarn finden und filtern welche Animiert sind
-        const neighbors = findNeighbors(x, y).filter(function (neighbor) {
-            return !animatedHexagons.some(function (animatedHexagon) {
-                return animatedHexagon.x === neighbor.x && animatedHexagon.y === neighbor.y;
-            });
-        });
-
-        // zufälligen Nachbarn auswählen, um ihn zu animieren
-        if (neighbors.length > 0) {
-            const randomNeighbor = neighbors[Math.floor(Math.random() * neighbors.length)];
-            animateHexagonColor(randomNeighbor.x, randomNeighbor.y, animatedHexagons);
-            animatedHexagons.push(randomNeighbor); // Ausgewählten nachbarn als animiert markieren
-        }
-    }, 5000);
-}
-
-// Wechselt die Farbe für den Fade-Effekt
-function changeColors(x, y, opacity) {
-    const currentTime = new Date().getTime();
-
-    const color = "rgba(" + Math.sin(currentTime / animationSpeed) * 128 + 128 + ", " + Math.sin(currentTime / animationSpeed + 2) * 128 + 128 +
-        ", " + Math.sin(currentTime / animationSpeed + 4) * 128 + 128 + ", " + opacity + ")";
-
-    requestAnimationFrame(function () {
-        drawHexagon(x, y, "rgb(13, 51, 85)", color); // Immer wieder erneutes Zeichnen der Ränder um Fade-Effekt zu erzielen
-        if (opacity > 0.2) {
-            changeColors(x, y, opacity - 0.006);
-        } else {
-            changeColorBlack(x, y, opacity)
-        }
-    });
-}
-
-// Ende des Fade-Effekts, Fade-Effekt zurück zur Standardfarbe
-function changeColorBlack(x, y) {
-
-    const FADE_DURATION = 2.0 * 1000; // 2 seconds
-    let startTime = -1.0;
-    let opacity = 0; // Initial opacity
-
-    // Function to render the current frame
-    function render(currTime) {
-        if (startTime < 0) {
-            startTime = currTime;
+            this.borderSegments.push({xPos: xPos, yPos: yPos});
         }
 
-        // Calculate the time that animation has been running (in ms)
-        const timeRunning = currTime - startTime;
+        // Fülle das Hexagon mit der gewünschten Farbe
+        context.fillStyle = this.fillColor;
+        context.fill();
 
-        // Calculate opacity based on time
-        if (timeRunning < FADE_DURATION) {
-            opacity = timeRunning / FADE_DURATION;
-        } else {
-            opacity = 1;
-        }
-
-        // Draw the hexagon with the updated border color
-        drawHexagon(x, y, "rgb(13, 51, 85)", "rgba(0, 0, 0, " + opacity + ")");
-
-        if (opacity < 0.8) {
-            // Continue animating
-            requestAnimationFrame(render);
-        }
-    }
-
-    // Start the animation
-    requestAnimationFrame(render);
-
-}
-
-// Funktion zum Finden von benachbarten Hexagons
-function findNeighbors(x, y) {
-    const neighbors = [];
-
-    const dx = hexagonWidth; // Anpassen Sie diesen Wert, um den horizontalen Abstand zu ändern
-    const dy = hexagonHeight * 0.75; // Anpassen Sie diesen Wert, um den vertikalen Abstand zu ändern
-
-    // Rechts
-    neighbors.push({x: x + dx, y: y});
-
-    // Links
-    neighbors.push({x: x - dx, y: y});
-
-    // Oben rechts
-    neighbors.push({x: x + dx / 2, y: y - dy});
-
-    // Oben links
-    neighbors.push({x: x - dx / 2, y: y - dy});
-
-    // Unten rechts
-    neighbors.push({x: x + dx / 2, y: y + dy});
-
-    // Unten links
-    neighbors.push({x: x - dx / 2, y: y + dy});
-
-    return neighbors;
-}
-
-// Funktion zum Zeichnen eines weißen Hexagons (Navbar)
-function drawWhiteHexagon(x, y, borderSides) {
-    const radius = 30; // Radius des Hexagons
-    context.beginPath();
-
-    // Berechnung der sechs Eckpunkte des Hexagons
-    for (let i = 0; i < 6; i++) {
-
-        context.strokeStyle = "rgb(0, 51, 102)";
+        // Zeichne den Hexagon-Rand in der angegebenen Farbe
+        context.strokeStyle = this.borderColor;
         context.lineWidth = 2;
         context.stroke();
 
-        context.lineJoin = "round";
-
-        drawHexagon(x, y, "rgb(0, 51, 102)");
-
-        // Zeichnen der Ränder basierend auf den borderSides
-        if (borderSides.left) {
-            context.beginPath();
-            context.strokeStyle = "blue";
-
-            // Zeichnen der Linie
-            context.lineWidth = 4;
-            context.moveTo(x - 26, y + 16);
-            context.lineTo(x - 26, y - 16);
-            context.stroke();
-        }
-
-        if (borderSides.right) {
-            context.beginPath();
-            context.strokeStyle = "blue";
-
-            // Zeichnen der Linie
-            context.lineWidth = 4;
-            context.moveTo(x + 26, y - 16);
-            context.lineTo(x + 26, y + 16);
-            context.stroke();
-        }
-
-        if (borderSides.topLeft) {
-            context.beginPath();
-            context.strokeStyle = "blue";
-
-            //Zeichnen der Linie
-            context.lineWidth = 4;
-            context.moveTo(x, y - radius);
-            context.lineTo(x - radius * 0.87, y - radius / 2);
-            context.stroke();
-
-            //Zeichnen von Punkten um Linien abzurunden
-            context.fillStyle = "blue";
-            context.lineWidth = 0;
-            context.arc(x, y - radius, 1.7, 0, 2 * Math.PI);
-            context.arc(x - radius * 0.87, y - radius / 2, 1.7, 0, 2 * Math.PI);
-            context.fill();
-        }
-
-        if (borderSides.topRight) {
-            context.beginPath();
-            context.moveTo(x, y - radius);
-            context.lineTo(x + radius * 0.87, y - radius / 2);
-            context.lineWidth = 4;
-            context.strokeStyle = "blue";
-            context.stroke();
-        }
-
-        if (borderSides.bottomLeft) {
-            context.beginPath();
-
-            // Zeichnen der Linie
-            context.moveTo(x, y + radius);
-            context.lineTo(x - radius * 0.87, y + radius / 2);
-            context.lineWidth = 4;
-            context.strokeStyle = "blue";
-            context.stroke();
-
-            // Zeichnen von Punkten um Linien abzurunden
-            context.fillStyle = "blue";
-            context.lineWidth = 0;
-            context.arc(x, y + radius, 1.7, 0, 2 * Math.PI);
-            context.arc(x - radius * 0.87, y + radius / 2, 1.7, 0, 2 * Math.PI);
-            context.fill();
-        }
-
-        if (borderSides.bottomRight) {
-            context.beginPath();
-
-            // Zeichnen der Linie
-            context.moveTo(x, y + radius);
-            context.lineTo(x + radius * 0.87, y + radius / 2);
-            context.lineWidth = 4;
-            context.strokeStyle = "blue";
-            context.stroke();
-            // Zeichnen von Punkten um Linien abzurunden
-            context.fillStyle = "blue";
-            context.lineWidth = 0;
-            context.arc(x, y + radius, 1.7, 0, 2 * Math.PI);
-            context.arc(x + radius * 0.87, y + radius / 2, 1.7, 0, 2 * Math.PI);
-            context.fill();
-        }
+        context.closePath();
     }
+    animateHexagonBorder() {
 
-    context.closePath();
+        const currentTime = new Date().getTime();
+        const color = "rgb(" + Math.sin(currentTime / animationSpeed) * 128 + 128 + ", " + Math.sin(currentTime / animationSpeed + 2) * 128 + 128 + ", " + Math.sin(currentTime / animationSpeed + 4) * 128 + 128 + ")";
 
+        requestAnimationFrame(() => {
+            this.borderColor = color;
+            this.draw();
+            this.changeColors(2);
+        });
+
+        const self = this;
+
+        setTimeout(function () {
+
+            // Sammelt Nachbarn die weder animiert noch Static sind
+            const checkedNeighbours = checkNeighbours(self);
+            if (checkedNeighbours.length > 0) {
+                let randomNeighbor = checkedNeighbours[Math.floor(Math.random() * (checkedNeighbours.length - 0) + 0)];
+                for (let i = 0; i < hexagoneArray.length; i++){
+                    if (hexagoneArray[i].col === randomNeighbor.col && hexagoneArray[i].row == randomNeighbor.row){
+                        hexagoneArray[i].animateHexagonBorder();
+                        hexagoneArray[i].hasAnimation = true; // Ausgewählten nachbarn als animiert markieren
+                    }
+                }
+            }
+        }, 5000);
+    }
+    changeColors(opacity) {
+        const currentTime = new Date().getTime();
+        const color = "rgba(" + Math.sin(currentTime / animationSpeed) * 128 + 128 + ", " + Math.sin(currentTime / animationSpeed + 2) * 128 + 128 +
+            ", " + Math.sin(currentTime / animationSpeed + 4) * 128 + 128 + ", " + opacity + ")";
+
+        requestAnimationFrame(() => {
+            this.borderColor = color;
+            this.draw();
+            if (opacity > 0.2) {
+                this.changeColors(opacity - 0.006);
+            } else {
+                this.endAnimation();
+            }
+        });
+    }
+    endAnimation(callback) {
+
+        const fadeDuration = 2.0 * 1000; // 2 seconds
+        let startTime = -1.0;
+        let opacity = 0; // Initial opacity
+
+        // Function to render the current frame
+        // Referenz auf das aktuelle Objekt
+        const self = this;
+
+        // Function to render the current frame
+        function render(currTime) {
+            if (startTime < 0) {
+                startTime = currTime;
+            }
+
+            // Calculate the time that animation has been running (in ms)
+            const timeRunning = currTime - startTime;
+
+            // Calculate opacity based on time
+            if (timeRunning < fadeDuration) {
+                opacity = timeRunning / fadeDuration;
+            } else {
+                opacity = 1;
+            }
+
+            // Draw the hexagon with the updated border color
+            self.borderColor = "rgba(0, 0, 0, " + opacity + ")";
+            self.draw();
+
+            if (opacity < 0.8) {
+                // Continue animating
+                requestAnimationFrame(render);
+            } else {
+                // Animation abgeschlossen
+                if (typeof callback === "function") {
+                    callback();
+                }
+            }
+        }
+
+        // Start the animation
+        requestAnimationFrame(render);
+
+    }
 }
 
-// Funktion zum Zeichnen der ganzen Navbar
-function drawNavbar(startX, startY) {
-
-    let i;
-    let borderSides;
-    const rangeNavBar = 6;
-
-    // Draws Horizontal Hexagons
-    for (let a = 0; a < 6; a++) {
-        if (a === 0) { // Erstes Hexagon
-
-            borderSides = {
-                left: true,
-                right: false,
-                bottomLeft: true,
-                bottomRight: false,
-                topLeft: true,
-                topRight: false
-            };
-            staticHexagone.push(startX,startY);
-            drawWhiteHexagon(startX, startY, borderSides);
-            startX += 52;
-
-        } else if (a === 5) { // Letztes Hexagon
-
-            borderSides = {
-                left: false,
-                right: true,
-                bottomLeft: false,
-                bottomRight: true,
-                topLeft: false,
-                topRight: true
-            };
-            staticHexagone.push(startX,startY);
-            drawWhiteHexagon(startX, startY, borderSides);
-            startX += 52;
-
-        } else {
-            // Hexagons in der Mitte
-            borderSides = {
-                left: false,
-                right: false,
-                bottomLeft: false,
-                bottomRight: false,
-                false: false,
-                topRight: false
-            };
-            staticHexagone.push(startX,startY);
-            drawWhiteHexagon(startX, startY, borderSides);
-            startX += 52;
-
+// Sammelt Nachbarn die keine Animation und nicht Static sind
+function checkNeighbours(hexagon) {
+    const checkedNeighbours = [];
+    for (let i = 0; i < hexagon.neighbours.length; i++) {
+        const neighbour = hexagon.neighbours[i];
+        for (let j = 0; j < hexagoneArray.length; j++) {
+            const hex = hexagoneArray[j];
+            if (neighbour.row === hex.row && neighbour.col === hex.col) {
+                if (!hex.isStatic && !hex.hasAnimation) {
+                    checkedNeighbours.push(hex);
+                }
+            }
         }
     }
+    return checkedNeighbours;
+}
 
-    //Untere Reihe
-    startX = whiteHexagonX;
-    startY += 45;
-    startX += 25;
-    for (i = 0; i < rangeNavBar - 1; i++) {
+// Wird beim Laden der Website abgerufen
+function onStart(){
+    drawBackground();
+}
 
-        if (i === 0) { // Erstes Hexagon
+// Zeichnet denn Background auf die Canvas
+function drawBackground(){
 
-            borderSides = {
-                left: true,
-                right: false,
-                bottomLeft: true,
-                bottomRight: true,
-                topLeft: false,
-                topRight: false
-            };
-            staticHexagone.push(startX,startY);
-            drawWhiteHexagon(startX, startY, borderSides);
-            startX += 52;
+    const canvasWidth = window.innerWidth;
+    const canvasHeight = window.innerHeight;
 
-        } else if (i === 4) { // Letztes Hexagon
+    canvas.width = canvasWidth;
+    canvas.height = canvasHeight;
 
-            borderSides = {
-                left: false,
-                right: true,
-                bottomLeft: true,
-                bottomRight: true,
-                topLeft: false,
-                topRight: false
-            };
-            staticHexagone.push(startX,startY);
-            drawWhiteHexagon(startX, startY, borderSides);
-            startX += 52;
+    let numRows = Math.ceil(canvasHeight / hexagonVerticalSpacing);
+    let numCols = Math.ceil(canvasWidth / hexagonHorizontalSpacing);
 
-        } else {
-            // Hexagons in der Mitte
-            borderSides = {
-                left: false,
-                right: false,
-                bottomLeft: true,
-                bottomRight: true,
-                topLeft: false,
-                topRight: false
-            };
-            staticHexagone.push(startX,startY);
-            drawWhiteHexagon(startX, startY, borderSides);
-            startX += 52;
+    // Erhöhe Anzahl Hexagone, um Rand zu vermeiden
+    numRows += 2;
+    numCols += 2;
 
+    for (let row = 0; row < numRows; row++) {
+        for (let col = 0; col < numCols; col++) {
+
+            let x = Math.floor(col * hexagonHorizontalSpacing + (row % 2) * (hexagonWidth / 2));
+            const y = Math.floor(row * hexagonVerticalSpacing);
+
+            // Überprüfen Sie, ob in der Nähe animierte Hexagons vorhanden sind
+            let hasNearbyAnimation = false;
+            for (let i = 0; i < hexagoneArray.length; i++) {
+                for (let j = 0; j < hexagoneArray[i].neighbours.length; j++) {
+                    if (hexagoneArray[i].neighbours) {
+                        if (hexagoneArray[i].neighbours[j].hasAnimation) {
+                            hasNearbyAnimation = true;
+                            break;
+                        }
+                    }
+                }
+            }
+            // Hinzufügen der restlichen Static Felder
+
+            let isStaticHexagon = false;
+
+
+            // Zufällig auswählen, welches Hexagon den Farbwechseleffekt haben soll, wenn keine Animation in der Nähe ist
+            let shouldAnimate= Math.random() < 0.1;//0.02; // 2 % der Fläsche bzw. Hexagons animieren
+
+            if(row === 20 && col === 18 || row === 20 && col === 20 || row === 20 && col === 16){
+                // codePen Icon
+                if(row === 20 && col === 18){
+
+                    var pattern1,pattern2;
+
+                    var img1=new Image();
+                    img1.src="/Users/t.esser/Lentox.github.io/Images/github.png";
+                    img1.onload = function() {
+                        // Erstelle ein Muster (Pattern) aus dem Bild
+                        pattern1 = context.createPattern(img1, 'repeat'); // Du kannst 'repeat' durch 'no-repeat' oder andere Werte ersetzen, um das Verhalten des Musters anzupassen
+
+                    }
+                    
+                    shouldAnimate = false;
+
+                    const hexagon = new Hexagon(x, y, row, col, hexagonRadius, pattern1, borderColor, true, false);
+
+                    hexagon.draw();
+                    hexagoneArray.push(hexagon);
+                }else if(row === 20 && col === 20){
+                    shouldAnimate = false;
+                    const hexagon = new Hexagon(x, y, row, col, hexagonRadius,"blue", borderColor, true, false);
+
+                    hexagon.draw();
+                    hexagoneArray.push(hexagon);
+                }else{
+                    shouldAnimate = false;
+                    const hexagon = new Hexagon(x, y, row, col, hexagonRadius,"#527fa6", borderColor, true, false);
+
+                    hexagon.draw();
+                    hexagoneArray.push(hexagon);
+                }
+
+            }else if (shouldAnimate && !hasNearbyAnimation  && !isStaticHexagon) {
+
+                const hexagon = new Hexagon(x, y, row, col, hexagonRadius, fillColor, borderColor, false, true);
+
+                hexagon.animateHexagonBorder();
+                hexagoneArray.push(hexagon);
+
+            }else if(isStaticHexagon){
+
+                shouldAnimate = false;
+
+                const hexagon = new Hexagon(x, y, row, col, hexagonRadius, fillColor, borderColor, isStaticHexagon, false);
+
+                hexagon.draw();
+                hexagoneArray.push(hexagon);
+
+            }else{
+                shouldAnimate = false;
+
+                const hexagon = new Hexagon(x, y, row, col, hexagonRadius, fillColor, borderColor, isStaticHexagon, false);
+
+                hexagon.draw();
+                hexagoneArray.push(hexagon);
+            }
+            setHexagonNeighbours();
         }
-
     }
+}
 
-    //Obere Reihe
-    startX = whiteHexagonX;
-    startY -= 90;
-    startX += 25;
-    for (i = 0; i < rangeNavBar - 1; i++) {
-
-        if (i === 0) { // Erstes Hexagon
-
-            borderSides = {
-                left: true,
-                right: false,
-                bottomLeft: false,
-                bottomRight: false,
-                topLeft: true,
-                topRight: true
-            };
-            staticHexagone.push(startX,startY);
-            drawWhiteHexagon(startX, startY, borderSides);
-            startX += 52;
-
-        } else if (i === 4) { // Letztes Hexagon
-
-            borderSides = {
-                left: false,
-                right: true,
-                bottomLeft: false,
-                bottomRight: false,
-                topLeft: true,
-                topRight: true
-            };
-            staticHexagone.push(startX,startY);
-            drawWhiteHexagon(startX, startY, borderSides);
-            startX += 52;
-
-        } else {
-            // Hexagons in der Mitte
-            borderSides = {
-                left: false,
-                right: false,
-                bottomLeft: false,
-                bottomRight: false,
-                topLeft: true,
-                topRight: true
-            };
-            staticHexagone.push(startX,startY);
-            drawWhiteHexagon(startX, startY, borderSides);
-            startX += 52;
-
-        }
-
+// Nachbarn aller Hexagone festlegen
+function setHexagonNeighbours(){
+    for (let i = 0; i < hexagoneArray.length; i++){
+        hexagoneArray[i].neighbours = findNeighbours(hexagoneArray[i].row, hexagoneArray[i].col);
     }
+}
 
+// Nachbarn des Hexagons auslesen
+function findNeighbours(row, col){
+    let neighbours = [];
+    neighbours.push({position: "topRight", row: row + 1, col: col})
+    neighbours.push({position: "topLeft", row: row - 1, col: col})
+    neighbours.push({position: "bottomRight", row: row + 1, col: col + 1})
+    neighbours.push({position: "bottomLeft", row: row + 1, col: col})
+    neighbours.push({position: "left", row: row, col: col - 1})
+    neighbours.push({position: "right", row: row, col: col + 1})
+    return neighbours;
 }
 
 // Wird beim Resize vom Window aufgerufen
 window.addEventListener("resize", function () {
-    placeHexagonsAfterwards();
-    drawNavbar(whiteHexagonX, whiteHexagonY);
+    drawBackground();
 });
 
-function shouldAnimateCheck(x, y){
-    for (var i = 0; i < staticHexagone.length; i++){
-        //Könnte falsch sein
-        if (x >= staticHexagone.x - 5 && x <= staticHexagone.x + 5 && y >= staticHexagone.y - 5 && y <= staticHexagone.y + 5) {
-            drawHexagon(x,y,"red","red");
-            return true;
-        } else {
-            return false;
-            drawHexagon(x,y,"green","green");
-        }
-    }
-    // Wenn true wird Hexagon animiert
-    //return true;
-}
-
-var staticHexagone = createStaticHexagone(whiteHexagonX,whiteHexagonY);
-placeHexagonsOnStart();
-drawNavbar(whiteHexagonX, whiteHexagonY);
+onStart();

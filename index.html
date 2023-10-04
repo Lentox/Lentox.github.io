@@ -1,16 +1,59 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-    <title>Hexagon Border</title>
+    <title>Home</title>
     <link rel="stylesheet" type="text/css" href="CSS/styles.css">
 </head>
 <body>
 
-<div class="white-hexagon"></div>
-<div class="HexagonCanvas">
+<!-- partial:index.partial.html -->
+<div class="social-icons">
+    <a class="social-icon social-icon--codepen">
+        <i class="fa fa-codepen"></i>
+        <div class="tooltip">Codepen</div>
+    </a>
+    <a class="social-icon social-icon--github">
+        <i class="fa fa-github"></i>
+        <div class="tooltip">Github</div>
+    </a>
+    <a class="social-icon social-icon--twitter">
+        <i class="fa fa-twitter"></i>
+        <div class="tooltip">Twitter</div>
+    </a>
+    <a class="social-icon social-icon--dribbble">
+        <i class="fa fa-dribbble"></i>
+        <div class="tooltip">Dribbble</div>
+    </a>
+    <a class="social-icon social-icon--instagram">
+        <i class="fa fa-instagram"></i>
+        <div class="tooltip">Instagram</div>
+    </a>
+    <a class="social-icon social-icon--linkedin">
+        <i class="fa fa-linkedin"></i>
+        <div class="tooltip">LinkedIn</div>
+    </a>
+    <a class="social-icon social-icon--facebook">
+        <i class="fa fa-facebook"></i>
+        <div class="tooltip">Facebook</div>
+    </a>
+</div>
+
+<div class="rounded-box">
+    <nav>
+        <a href="#">HOME</a>
+        <a href="#">CODING</a>
+        <a href="#">ABOUT</a>
+        <div id="indicator"></div>
+    </nav>
+</div>
+
+
+
+<div class="hexagonCanvas">
     <canvas id="hexagonCanvas"></canvas>
     <script src="Scripts/Background.js"></script>
 </div>
+
 
 </body>
 </html>
