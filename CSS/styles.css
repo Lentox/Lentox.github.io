@@ -8,3 +8,157 @@
     z-index: 0;
     background-color: #1e1f26;
 }
+
+* {
+    padding: 0;
+    margin: 0;
+}
+
+html {
+    font-size: 16px;
+}
+
+body {
+    min-height: 180vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
+    place-content: center;
+
+    z-index: 1;
+
+    overflow: hidden;
+}
+
+.homeWindow {
+    min-height: 30vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    top: 50%; /* Zentrieren Sie vertikal */
+    left: 0;
+    right: 0;
+    transform: translateY(-50%); /* Zentrieren Sie horizontal und vertikal */
+    z-index: 999;
+
+    bottom: 70px; /* Fügen Sie den gewünschten Abstand nach unten hinzu */
+}
+
+.homeHeader {
+    font-family: 'Helvetica Neue', sans-serif; /* Ändern Sie die Schriftart nach Ihren Wünschen */
+    font-size: 36px;
+    color: blue; /* Textfarbe */
+    text-align: center;
+    text-transform: uppercase; /* Großbuchstaben */
+    letter-spacing: 2px; /* Zeichenabstand */
+    position: absolute;
+    top: 100px; /* Abstand nach oben */
+    left: 50%; /* Zentrieren horizontal */
+    transform: translateX(-50%); /* Horizontal zentrieren */
+    z-index: 999;
+}
+
+.navBar {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end; /* Vertikal zentrieren und nach unten ausrichten */
+    align-items: center;
+    position: fixed; /* Verwenden Sie "fixed" anstelle von "absolute", um sicherzustellen, dass es immer sichtbar bleibt */
+    bottom: 20px; /* Am unteren Rand der Seite positionieren */
+    left: 50%; /* In der horizontalen Mitte der Seite positionieren */
+    transform: translateX(-50%); /* Zentrieren Sie horizontal relativ zum Viewport */
+    z-index: 999;
+}
+
+nav {
+    --item-size: 4rem;
+    --fg-primary: #555555;
+    --transition: 300ms ease-in-out;
+    --dot-size: 0.35rem;
+
+    border: 3px solid #4195fc; /* some kind of blue border */
+    -webkit-box-shadow: 0px 0px 4px #4195fc;
+    -moz-box-shadow: 0px 0px 4px #4195fc;
+    box-shadow: 0px 0px 4px #4195fc; /* some variation of blue for the shadow */
+
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-rows: var(--item-size);
+    grid-auto-columns: calc(
+            1.375 *
+            var(--item-size)
+    );
+
+    border-radius: 0.875rem;
+
+    overflow: hidden;
+    z-index: 6;
+}
+
+nav > a {
+    position: relative;
+
+    display: grid;
+    place-content: center;
+
+    color: var(--fg-primary);
+}
+
+nav > a::before {
+    content: '';
+
+    position: absolute;
+    left: 50%;
+    bottom: -0.6rem;
+    width: var(--dot-size);
+    height: var(--dot-size);
+
+    border-radius: 50%;
+
+    background-color: rgba(var(--hi-color, 0.85));
+
+    transform: translate(-50%, -50%);
+
+    transition: transform var(--transition);
+}
+
+nav > a:hover {
+    color: rgb(var(--hi-color));
+}
+
+nav > a > * {
+    transition: transform var(--transition),
+    fill var(--transition);
+}
+
+nav > a.active > * {
+    color: rgb(var(--hi-color));
+    fill: rgba(var(--hi-color), 0.1);
+
+    transform: translateY(-0.50rem);
+}
+
+nav > a.active::before {
+    transform:
+            translate(-50%, -50%)
+            translateY(-0.75rem);
+}
+
+nav > a.home {
+    --hi-color: 185, 77, 221;
+}
+
+nav > a.wallet {
+    --hi-color: 128, 76, 222;
+}
+
+nav > a.chart {
+    --hi-color: 88, 147, 250;
+}
+
+nav > a.shield {
+    --hi-color: 83, 234, 229;
+}
