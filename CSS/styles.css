@@ -61,6 +61,20 @@ body {
     z-index: 999;
 }
 
+.codingHeader {
+    font-family: 'Helvetica Neue', sans-serif; /* Ändern Sie die Schriftart nach Ihren Wünschen */
+    font-size: 36px;
+    color: blue; /* Textfarbe */
+    text-align: center;
+    text-transform: uppercase; /* Großbuchstaben */
+    letter-spacing: 2px; /* Zeichenabstand */
+    position: absolute;
+    top: 100px; /* Abstand nach oben */
+    left: 50%; /* Zentrieren horizontal */
+    transform: translateX(-50%); /* Horizontal zentrieren */
+    z-index: 999;
+}
+
 .navBar {
     display: flex;
     flex-direction: column;

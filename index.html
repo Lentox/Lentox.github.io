@@ -18,7 +18,13 @@
         <link href="CSS/task.css" rel="stylesheet">
         <link href="CSS/progress.css" rel="stylesheet">
         <link href="CSS/elements.css" rel="stylesheet">
-        <link href="CSS/glowing-border.css" rel="stylesheet">
+        <link href="CSS/mainHeader.css" rel="stylesheet">
+        <link href="CSS/icons.css" rel="stylesheet">
+
+        <link
+                rel="stylesheet"
+                href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+        />
 
     </head>
 
@@ -26,10 +32,27 @@
         <canvas class="background"></canvas>
         <script src="Scripts/rendered-js.js"></script>
 
+        <div class="startWindow">
+            <div id="middleCol">
+                <div class="mainHeader"></div>
+                <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js'></script>
+                <script src="Scripts/mainHeaderScript.js"></script>
+            </div>
+            <div id="bottomCol">
+                <div class="social-links">
+                    <a href=""><i class="fab fa-facebook-f"></i></a>
+                    <a href=""><i class="fab fa-instagram"></i></a>
+                    <a href=""><i class="fab fa-twitter"></i></a>
+                    <a href=""><i class="fab fa-github"></i></a>
+                    <a href=""><i class="fab fa-linkedin-in"></i></a>
+                </div>
+                <script src="https://cpwebassets.codepen.io/assets/editor/iframe/iframeRefreshCSS-44fe83e49b63affec96918c9af88c0d80b209a862cf87ac46bc933074b8c557d.js"></script>
+            </div>
+        </div>
+
         <div class="homeHeader" style="display: none;">
             <h1>Coding</h1>
         </div>
-
         <div class="homeWindow" style="display: none;">
             <main>
             <div class="lanes">
@@ -655,7 +678,637 @@
             </div>
             </main>
         </div>
-    <div class="navBar" >
+
+        <div class="codingHeader" style="display: none;">
+            <h1>Coding</h1>
+        </div>
+        <div class="codingWindow" style="display: none;">
+            <main>
+                <div class="lanes">
+                    <article class="lane">
+                        <header class="lane__header">
+                            <em>10</em>
+                            <h2>Backlog</h2>
+
+                            <a href="#" class="action">
+                                <svg width="16" height="16">
+                                    <use href="./assets/icons/SortDescending.svg#icon" />
+                                </svg>
+                            </a>
+                        </header>
+                        <div class="lane__tasks">
+                            <section class="task">
+                                <header>
+                                    <h3>Form Elements</h3>
+                                    <a href="#" class="action">
+                                        <svg width="16" height="16">
+                                            <use href="./assets/icons/PencilSimple.svg#icon" />
+                                        </svg>
+                                    </a>
+                                </header>
+                                <div class="task__body">
+                                    <small>Covenant Design System</small>
+                                    <div class="task__indicators">
+                                        <time class="deadline hi--positive" datetime="2022-12-13">
+                                            in 4 weeks
+                                        </time>
+                                        <data class="priority hi--attention" value="2">
+                                            <span></span>
+                                            <span></span>
+                                            <span></span>
+                                            Medium
+                                        </data>
+                                    </div>
+                                    <dl class="task__meta-data">
+                                        <dt>
+                                            <svg width="16" height="16">
+                                                <use href="./assets/icons/Clock.svg#icon" />
+                                            </svg>
+                                        </dt>
+                                        <dd>
+                                            12&nbsp;<small>h estimated</small>
+                                        </dd>
+                                    </dl>
+                                    <dl class="task__meta-data">
+                                        <dt>
+                                            <svg width="16" height="16">
+                                                <use href="./assets/icons/ChatTeardropDots.svg#icon" />
+                                            </svg>
+                                        </dt>
+                                        <dd>
+                                            3
+                                        </dd>
+                                        <dt>
+                                            <svg width="16" height="16">
+                                                <use href="./assets/icons/FileText.svg#icon" />
+                                            </svg>
+                                        </dt>
+                                        <dd>
+                                            6
+                                        </dd>
+                                        <dt>
+                                            <svg width="16" height="16">
+                                                <use href="./assets/icons/LinkSimple.svg#icon" />
+                                            </svg>
+                                        </dt>
+                                        <dd>
+                                            0
+                                        </dd>
+                                    </dl>
+                                    <ul class="tag-list">
+                                        <li>busywork</li>
+                                        <li>inspiration</li>
+                                    </ul>
+                                </div>
+                            </section>
+                            <section class="task">
+                                <header>
+                                    <h3>Dropdown Styling</h3>
+                                    <a href="#" class="action">
+                                        <svg width="16" height="16">
+                                            <use href="./assets/icons/PencilSimple.svg#icon" />
+                                        </svg>
+                                    </a>
+                                </header>
+                                <div class="task__body">
+                                    <small>Covenant Design System</small>
+                                    <div class="task__indicators">
+                                        <time class="deadline hi--muted" datetime="2022-12-13">
+                                            in 8 weeks
+                                        </time>
+                                        <data class="priority hi--negative" value="3">
+                                            <span></span>
+                                            <span></span>
+                                            <span></span>
+                                            High
+                                        </data>
+                                    </div>
+                                    <dl class="task__meta-data">
+                                        <dt>
+                                            <svg width="16" height="16">
+                                                <use href="./assets/icons/Clock.svg#icon" />
+                                            </svg>
+                                        </dt>
+                                        <dd>
+                                            12&nbsp;<small>h estimated</small>
+                                        </dd>
+                                    </dl>
+                                    <dl class="task__meta-data">
+                                        <dt>
+                                            <svg width="16" height="16">
+                                                <use href="./assets/icons/ChatTeardropDots.svg#icon" />
+                                            </svg>
+                                        </dt>
+                                        <dd>
+                                            0
+                                        </dd>
+                                        <dt>
+                                            <svg width="16" height="16">
+                                                <use href="./assets/icons/FileText.svg#icon" />
+                                            </svg>
+                                        </dt>
+                                        <dd>
+                                            4
+                                        </dd>
+                                        <dt>
+                                            <svg width="16" height="16">
+                                                <use href="./assets/icons/LinkSimple.svg#icon" />
+                                            </svg>
+                                        </dt>
+                                        <dd>
+                                            1
+                                        </dd>
+                                    </dl>
+                                    <ul class="tag-list">
+                                        <li>focuswork</li>
+                                        <li>css</li>
+                                        <li>js</li>
+                                    </ul>
+                                </div>
+                            </section>
+                            <section class="task">
+                                <header>
+                                    <h3>Optimize Performance</h3>
+                                    <a href="#" class="action">
+                                        <svg width="16" height="16">
+                                            <use href="./assets/icons/PencilSimple.svg#icon" />
+                                        </svg>
+                                    </a>
+                                </header>
+                                <div class="task__body">
+                                    <small>Luminous Landing Page</small>
+                                    <div class="task__indicators">
+                                        <time class="deadline hi--muted" datetime="2022-12-13">
+                                            in 12 weeks
+                                        </time>
+                                        <data class="priority hi--neutral" value="1">
+                                            <span></span>
+                                            <span></span>
+                                            <span></span>
+                                            Low
+                                        </data>
+                                    </div>
+                                    <dl class="task__meta-data">
+                                        <dt>
+                                            <svg width="16" height="16">
+                                                <use href="./assets/icons/Clock.svg#icon" />
+                                            </svg>
+                                        </dt>
+                                        <dd>
+                                            4&nbsp;<small>h estimated</small>
+                                        </dd>
+                                    </dl>
+                                    <dl class="task__meta-data">
+                                        <dt>
+                                            <svg width="16" height="16">
+                                                <use href="./assets/icons/ChatTeardropDots.svg#icon" />
+                                            </svg>
+                                        </dt>
+                                        <dd>
+                                            2
+                                        </dd>
+                                        <dt>
+                                            <svg width="16" height="16">
+                                                <use href="./assets/icons/FileText.svg#icon" />
+                                            </svg>
+                                        </dt>
+                                        <dd>
+                                            2
+                                        </dd>
+                                        <dt>
+                                            <svg width="16" height="16">
+                                                <use href="./assets/icons/LinkSimple.svg#icon" />
+                                            </svg>
+                                        </dt>
+                                        <dd>
+                                            0
+                                        </dd>
+                                    </dl>
+                                    <ul class="tag-list">
+                                        <li>focuswork</li>
+                                        <li>css</li>
+                                        <li>js</li>
+                                    </ul>
+                                </div>
+                            </section>
+                        </div>
+                    </article>
+                    <article class="lane">
+                        <header class="lane__header">
+                            <em>8</em>
+                            <h2>Blocked</h2>
+
+                            <a href="#" class="action">
+                                <svg width="16" height="16">
+                                    <use href="./assets/icons/SortDescending.svg#icon" />
+                                </svg>
+                            </a>
+                        </header>
+                        <div class="lane__tasks">
+                            <section class="task">
+                                <header>
+                                    <h3>Adapt Text Contrast</h3>
+                                    <a href="#" class="action">
+                                        <svg width="16" height="16">
+                                            <use href="./assets/icons/PencilSimple.svg#icon" />
+                                        </svg>
+                                    </a>
+                                </header>
+                                <div class="task__body">
+                                    <small>mo:diff Compare</small>
+                                    <div class="task__indicators">
+                                        <time class="deadline hi--positive" datetime="2022-12-13">
+                                            in 2 weeks
+                                        </time>
+                                        <data class="priority hi--negative" value="3">
+                                            <span></span>
+                                            <span></span>
+                                            <span></span>
+                                            High
+                                        </data>
+                                    </div>
+                                    <dl class="task__meta-data">
+                                        <dt>
+                                            <svg width="16" height="16">
+                                                <use href="./assets/icons/WarningCircle.svg#icon" />
+                                            </svg>
+                                        </dt>
+                                        <dd>
+                                            Missing client feedback
+                                        </dd>
+                                    </dl>
+                                    <dl class="task__meta-data">
+                                        <dt>
+                                            <svg width="16" height="16">
+                                                <use href="./assets/icons/ChatTeardropDots.svg#icon" />
+                                            </svg>
+                                        </dt>
+                                        <dd>
+                                            6
+                                        </dd>
+                                        <dt class="hi hi--attention">
+                                            <svg width="16" height="16">
+                                                <use href="./assets/icons/FileText.svg#icon" />
+                                            </svg>
+                                        </dt>
+                                        <dd>
+                                            8
+                                        </dd>
+                                        <dt>
+                                            <svg width="16" height="16">
+                                                <use href="./assets/icons/LinkSimple.svg#icon" />
+                                            </svg>
+                                        </dt>
+                                        <dd>
+                                            4
+                                        </dd>
+                                    </dl>
+                                    <ul class="tag-list">
+                                        <li>busywork</li>
+                                        <li>inspiration</li>
+                                    </ul>
+                                </div>
+                            </section>
+                            <section class="task">
+                                <header>
+                                    <h3>Rework Landing Page</h3>
+                                    <a href="#" class="action">
+                                        <svg width="16" height="16">
+                                            <use href="./assets/icons/PencilSimple.svg#icon" />
+                                        </svg>
+                                    </a>
+                                </header>
+                                <div class="task__body">
+                                    <small>spinly Web Page</small>
+                                    <div class="task__indicators">
+                                        <time class="deadline hi--neutral" datetime="2022-12-13">
+                                            due today
+                                        </time>
+                                        <data class="priority hi--neutral" value="1">
+                                            <span></span>
+                                            <span></span>
+                                            <span></span>
+                                            Low
+                                        </data>
+                                    </div>
+                                    <dl class="task__meta-data">
+                                        <dt>
+                                            <svg width="16" height="16">
+                                                <use href="./assets/icons/WarningCircle.svg#icon" />
+                                            </svg>
+                                        </dt>
+                                        <dd>
+                                            Visuals not ready
+                                        </dd>
+                                    </dl>
+                                    <dl class="task__meta-data">
+                                        <dt>
+                                            <svg width="16" height="16">
+                                                <use href="./assets/icons/ChatTeardropDots.svg#icon" />
+                                            </svg>
+                                        </dt>
+                                        <dd>
+                                            6
+                                        </dd>
+                                        <dt>
+                                            <svg width="16" height="16">
+                                                <use href="./assets/icons/FileText.svg#icon" />
+                                            </svg>
+                                        </dt>
+                                        <dd>
+                                            12
+                                        </dd>
+                                        <dt  class="hi hi--attention">
+                                            <svg width="16" height="16">
+                                                <use href="./assets/icons/LinkSimple.svg#icon" />
+                                            </svg>
+                                        </dt>
+                                        <dd>
+                                            12
+                                        </dd>
+                                    </dl>
+                                    <ul class="tag-list">
+                                        <li>focuswork</li>
+                                        <li>css</li>
+                                        <li>js</li>
+                                    </ul>
+                                </div>
+                            </section>
+                            <section class="task hi hi--negative">
+                                <header>
+                                    <h3>Fix Focus Behaviour</h3>
+                                    <a href="#" class="action">
+                                        <svg width="16" height="16">
+                                            <use href="./assets/icons/PencilSimple.svg#icon" />
+                                        </svg>
+                                    </a>
+                                </header>
+                                <div class="task__body">
+                                    <small>TZY Signup Form</small>
+                                    <div class="task__indicators">
+                                        <time class="deadline hi--negative hi--strong" datetime="2022-12-13">
+                                            1 day overdue
+                                        </time>
+                                        <data class="priority hi--neutral" value="1">
+                                            <span></span>
+                                            <span></span>
+                                            <span></span>
+                                            Low
+                                        </data>
+                                    </div>
+                                    <dl class="task__meta-data">
+                                        <dt>
+                                            <svg width="16" height="16">
+                                                <use href="./assets/icons/WarningCircle.svg#icon" />
+                                            </svg>
+                                        </dt>
+                                        <dd>
+                                            Issues with dropdown
+                                        </dd>
+                                    </dl>
+                                    <dl class="task__meta-data">
+                                        <dt>
+                                            <svg width="16" height="16">
+                                                <use href="./assets/icons/ChatTeardropDots.svg#icon" />
+                                            </svg>
+                                        </dt>
+                                        <dd>
+                                            5
+                                        </dd>
+                                        <dt>
+                                            <svg width="16" height="16">
+                                                <use href="./assets/icons/FileText.svg#icon" />
+                                            </svg>
+                                        </dt>
+                                        <dd>
+                                            1
+                                        </dd>
+                                        <dt  class="hi hi--attention">
+                                            <svg width="16" height="16">
+                                                <use href="./assets/icons/LinkSimple.svg#icon" />
+                                            </svg>
+                                        </dt>
+                                        <dd>
+                                            1
+                                        </dd>
+                                    </dl>
+                                    <ul class="tag-list">
+                                        <li>focuswork</li>
+                                        <li>css</li>
+                                        <li>js</li>
+                                    </ul>
+                                </div>
+                            </section>
+                        </div>
+                    </article>
+                    <article class="lane">
+                        <header class="lane__header">
+                            <em>4</em>
+                            <h2>In Progress</h2>
+
+                            <a href="#" class="action">
+                                <svg width="16" height="16">
+                                    <use href="./assets/icons/SortDescending.svg#icon" />
+                                </svg>
+                            </a>
+                        </header>
+                        <div class="lane__tasks">
+                            <section class="task">
+                                <header>
+                                    <h3>Setup Production System</h3>
+                                    <a href="#" class="action">
+                                        <svg width="16" height="16">
+                                            <use href="./assets/icons/PencilSimple.svg#icon" />
+                                        </svg>
+                                    </a>
+                                </header>
+                                <div class="task__body">
+                                    <small>Dreamcatcher Sleep Tracker</small>
+                                    <div class="task__indicators">
+                                        <time class="deadline hi--neutral" datetime="2022-12-13">
+                                            due today
+                                        </time>
+                                        <data class="priority hi--negative" value="3">
+                                            <span></span>
+                                            <span></span>
+                                            <span></span>
+                                            High
+                                        </data>
+                                    </div>
+                                    <div class="task__progress progress">
+                                        <ul class="progress__details">
+                                            <li>75 <small>%</small></li>
+                                            <li>16 <small>h spent</small></li>
+                                            <li>24 <small>h estimated</small></li>
+                                        </ul>
+                                        <div class="progress__bar" style="--value: 75;"></div>
+                                    </div>
+                                    <dl class="task__meta-data">
+                                        <dt class="hi hi--attention">
+                                            <svg width="16" height="16">
+                                                <use href="./assets/icons/ChatTeardropDots.svg#icon" />
+                                            </svg>
+                                        </dt>
+                                        <dd>
+                                            4
+                                        </dd>
+                                        <dt>
+                                            <svg width="16" height="16">
+                                                <use href="./assets/icons/FileText.svg#icon" />
+                                            </svg>
+                                        </dt>
+                                        <dd>
+                                            0
+                                        </dd>
+                                        <dt>
+                                            <svg width="16" height="16">
+                                                <use href="./assets/icons/LinkSimple.svg#icon" />
+                                            </svg>
+                                        </dt>
+                                        <dd>
+                                            6
+                                        </dd>
+                                    </dl>
+                                    <ul class="tag-list">
+                                        <li>hosting</li>
+                                        <li>docs</li>
+                                        <li>hypercare</li>
+                                    </ul>
+                                </div>
+                            </section>
+                            <section class="task">
+                                <header>
+                                    <h3>Update Dependencies</h3>
+                                    <a href="#" class="action">
+                                        <svg width="16" height="16">
+                                            <use href="./assets/icons/PencilSimple.svg#icon" />
+                                        </svg>
+                                    </a>
+                                </header>
+                                <div class="task__body">
+                                    <small>head.space idea manager</small>
+                                    <div class="task__indicators">
+                                        <time class="deadline hi--attention" datetime="2022-12-13">
+                                            in 5 days
+                                        </time>
+                                        <data class="priority hi--attention" value="2">
+                                            <span></span>
+                                            <span></span>
+                                            <span></span>
+                                            Medium
+                                        </data>
+                                    </div>
+                                    <div class="task__progress progress">
+                                        <ul class="progress__details">
+                                            <li>20 <small>%</small></li>
+                                            <li>2 <small>h spent</small></li>
+                                            <li>10 <small>h estimated</small></li>
+                                        </ul>
+                                        <div class="progress__bar" style="--value: 20;"></div>
+                                    </div>
+                                    <dl class="task__meta-data">
+                                        <dt class="hi hi--attention">
+                                            <svg width="16" height="16">
+                                                <use href="./assets/icons/ChatTeardropDots.svg#icon" />
+                                            </svg>
+                                        </dt>
+                                        <dd>
+                                            9
+                                        </dd>
+                                        <dt>
+                                            <svg width="16" height="16">
+                                                <use href="./assets/icons/FileText.svg#icon" />
+                                            </svg>
+                                        </dt>
+                                        <dd>
+                                            11
+                                        </dd>
+                                        <dt>
+                                            <svg width="16" height="16">
+                                                <use href="./assets/icons/LinkSimple.svg#icon" />
+                                            </svg>
+                                        </dt>
+                                        <dd>
+                                            4
+                                        </dd>
+                                    </dl>
+                                    <ul class="tag-list">
+                                        <li>security</li>
+                                        <li>testing</li>
+                                        <li>compat</li>
+                                    </ul>
+                                </div>
+                            </section>
+                            <section class="task">
+                                <header>
+                                    <h3>Replace Key Visual</h3>
+                                    <a href="#" class="action">
+                                        <svg width="16" height="16">
+                                            <use href="./assets/icons/PencilSimple.svg#icon" />
+                                        </svg>
+                                    </a>
+                                </header>
+                                <div class="task__body">
+                                    <small>Covenant Design System</small>
+                                    <div class="task__indicators">
+                                        <time class="deadline hi--attention" datetime="2022-12-13">
+                                            in 2 days
+                                        </time>
+                                        <data class="priority hi--muted" value="3">
+                                            <span></span>
+                                            <span></span>
+                                            <span></span>
+                                            None
+                                        </data>
+                                    </div>
+                                    <div class="task__progress progress">
+                                        <ul class="progress__details">
+                                            <li>50 <small>%</small></li>
+                                            <li>1 <small>h spent</small></li>
+                                            <li>2 <small>h estimated</small></li>
+                                        </ul>
+                                        <div class="progress__bar" style="--value: 50;"></div>
+                                    </div>
+                                    <dl class="task__meta-data">
+                                        <dt>
+                                            <svg width="16" height="16">
+                                                <use href="./assets/icons/ChatTeardropDots.svg#icon" />
+                                            </svg>
+                                        </dt>
+                                        <dd>
+                                            0
+                                        </dd>
+                                        <dt class="hi hi--attention">
+                                            <svg width="16" height="16">
+                                                <use href="./assets/icons/FileText.svg#icon" />
+                                            </svg>
+                                        </dt>
+                                        <dd>
+                                            1
+                                        </dd>
+                                        <dt>
+                                            <svg width="16" height="16">
+                                                <use href="./assets/icons/LinkSimple.svg#icon" />
+                                            </svg>
+                                        </dt>
+                                        <dd>
+                                            0
+                                        </dd>
+                                    </dl>
+                                    <ul class="tag-list">
+                                        <li>visuals</li>
+                                        <li>simple</li>
+                                        <li>nobrainer</li>
+                                    </ul>
+                                </div>
+                            </section>
+                        </div>
+                    </article>
+                </div>
+            </main>
+        </div>
+
+        <div class="navBar" >
         <nav id="NavContainer">
             <a href="#" class="home"/>
                 <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -695,8 +1348,7 @@
                           stroke-linejoin="round" />
                 </svg>
             </a>
-        </nav>
-    </div>
+        </nav></div>
 
         <script type="text/javascript" src="Scripts/nav.js"></script>
 

@@ -1,0 +1,5 @@
+.startWindow {
+    display: flex;
+    height: 500px; /* Hier können Sie die gewünschte Höhe in Pixeln oder einer anderen Einheit festlegen */
+    z-index: 999;
+}

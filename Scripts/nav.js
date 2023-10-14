@@ -9,6 +9,11 @@ document.querySelectorAll('nav > a')
                     e.currentTarget.classList.remove('active');
                     active = null; // Setzen Sie active auf null, da es nicht mehr aktiv ist
                     openHomeWindow();
+                }else
+                if (e.currentTarget.className === "wallet active"){
+                    e.currentTarget.classList.remove('active');
+                    active = null; // Setzen Sie active auf null, da es nicht mehr aktiv ist
+                    openCodingWindow();
                 }else{
                     e.currentTarget.classList.remove('active');
                     active = null; // Setzen Sie active auf null, da es nicht mehr aktiv ist
@@ -23,6 +28,10 @@ document.querySelectorAll('nav > a')
                 if (e.currentTarget.className === "home active"){
                     openHomeWindow();
                 }
+                if (e.currentTarget.className === "wallet active"){
+                    openCodingWindow();
+                }
+                console.log(e.currentTarget.className);
             }
         });
     });
@@ -36,12 +45,29 @@ const homeHeader = document.querySelector('.homeHeader');
 function openHomeWindow() {
     if (homeWindow.style.display == 'flex'){
         homeWindow.style.display = 'none'; // Verbergen Sie das HomeWindow
-        homeHeader.style.display = 'none';
         active.classList.remove('active');
         active = null;
     }else{
         homeWindow.style.display = 'flex'; // Zeigen Sie das HomeWindow an
-        homeHeader.style.display = 'flex';
+    }
+
+}
+
+// Holen Sie sich das HomeWindow-Element
+const codingWindow = document.querySelector('.codingWindow');
+
+const codingHeader = document.querySelector('.codingHeader');
+
+// Funktion zum Öffnen des HomeWindows
+function openCodingWindow() {
+    if (codingWindow.style.display == 'flex'){
+        codingWindow.style.display = 'none'; // Verbergen Sie das HomeWindow
+        codingHeader.style.display = 'none';
+        active.classList.remove('active');
+        active = null;
+    }else{
+        codingWindow.style.display = 'flex'; // Zeigen Sie das HomeWindow an
+        codingHeader.style.display = 'flex';
     }
 
 }
