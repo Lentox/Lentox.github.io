@@ -1,9 +1,0 @@
-.mainHeader {
-    height: 500px;
-    display:flex;
-    margin:auto;
-    color: white;
-    position: absolute;
-    font: 700 normal 2.5em 'tahoma';
-    z-index: 999;
-}
