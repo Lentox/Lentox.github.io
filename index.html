@@ -1,16 +1,185 @@
 <!DOCTYPE html>
-<html lang="en" >
+<html lang="en">
+<head>
+    <title></title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: lightgray;
+        }
 
-    <head>
-        <meta charset="UTF-8">
+        canvas {
+            position: absolute;
+        }
+    </style>
+</head>
+<body>
+<canvas id="hexagonCanvas"></canvas>
 
-        <title>Lentox</title>
+<script>
+    let canvas = document.getElementById("hexagonCanvas");
+    let context = canvas.getContext("2d");
 
-    </head>
+    // Globale
+    let hexagoneArray = [];
+    // Funktion, um Canvas-Größe an die Fenstergröße anzupassen
+    function resizeCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
 
-    <body>
+        // Zeichne die Hexagons
+        drawHexagons();
+        drawSocialMediaFields();
+        drawNavFields();
+    }
 
-    </body>
+    function drawNavFields() {
+        const positions = [
+            { sourceRow: -6, sourceCol: -1, targetRow: -4, targetCol: -1 },
+            { sourceRow: -5, sourceCol: 1, targetRow: -3, targetCol: 1 },
+            { sourceRow: -7, sourceCol: -3, targetRow: -5, targetCol: -3 },
+            { sourceRow: -4, sourceCol: 3, targetRow: -2, targetCol: 3 }
+        ];
 
+        positions.forEach(position => {
+            const sourceHexagon = findHexagonByPosition(hexagoneArray, position.sourceRow, position.sourceCol);
+            const targetHexagon = findHexagonByPosition(hexagoneArray, position.targetRow, position.targetCol);
+
+            if (sourceHexagon && isHexagonVisible(sourceHexagon)) {
+                sourceHexagon.fillColor = "blue";
+                sourceHexagon.drawHexagon(0, 0, 40);
+            } else if (targetHexagon && isHexagonVisible(targetHexagon)) {
+                targetHexagon.fillColor = "blue";
+                targetHexagon.drawHexagon(0, 0, 40);
+            }
+        });
+    }
+
+    function drawSocialMediaFields() {
+        const positions = [
+            { sourceRow: 6, sourceCol: 0, targetRow: 4, targetCol: 0 },
+            { sourceRow: 5, sourceCol: -2, targetRow: 3, targetCol: -2 },
+            { sourceRow: 7, sourceCol: 2, targetRow: 5, targetCol: 2 }
+        ];
+
+        positions.forEach(position => {
+            const sourceHexagon = findHexagonByPosition(hexagoneArray, position.sourceRow, position.sourceCol);
+            const targetHexagon = findHexagonByPosition(hexagoneArray, position.targetRow, position.targetCol);
+
+            if (sourceHexagon && isHexagonVisible(sourceHexagon)) {
+                sourceHexagon.fillColor = "blue";
+                sourceHexagon.drawHexagon(0, 0, 40);
+            } else if (targetHexagon && isHexagonVisible(targetHexagon)) {
+                targetHexagon.fillColor = "blue";
+                targetHexagon.drawHexagon(0, 0, 40);
+            }
+        });
+    }
+
+    function findHexagonByPosition(hexagoneArray, row, col) {
+        return hexagoneArray.find(hexagon => hexagon.row === row && hexagon.col === col);
+    }
+
+    function isHexagonVisible(hexagon) {
+        // Überprüfen, ob das Hexagon innerhalb der sichtbaren Canvas-Fläche ist
+        return (
+            hexagon.x + 40 >= 0 &&
+            hexagon.x - 40 <= canvas.width &&
+            hexagon.y + 40 >= 0 &&
+            hexagon.y - 40 <= canvas.height
+        );
+    }
+
+    // Zeichne die Hexagons
+    function drawHexagons() {
+
+        let hexagonRadius = 40;
+        let centerX = canvas.width / 2;
+        let centerY = canvas.height / 2;
+
+        let fillColor = "lightblue";
+        let borderColor = "blue";
+        let textColor = "white";
+
+        let numRows = Math.floor((canvas.height - hexagonRadius) / (hexagonRadius * 1.5));
+        let numCols = Math.floor((canvas.width - hexagonRadius) / (hexagonRadius * 1.5));
+
+        // Anpassung des Versatzes in Y-Richtung, um Hexagone sowohl unter als auch über dem mittleren Hexagon zu zeichnen
+        let yOffset = hexagonRadius * 1.75;
+        // Anpassung des Versatzes in X-Richtung, um Hexagone sowohl rechts als auch links neben dem mittleren Hexagon zu zeichnen
+        let xOffset = hexagonRadius * 1.5;
+
+        // Anpassung des Y-Offsets für die Reihen links und rechts daneben
+        let yRowOffset = hexagonRadius * 0.85;
+
+        // Wählen Sie die Verschiebungsrichtung (1 für nach unten, -1 für nach oben)
+        let direction = 1;
+
+        // Löschen der bestehenden Hexagon Elemente
+        hexagoneArray = [];
+
+        for (let col = -numCols; col <= numCols; col++) {
+            for (let row = 0; row <= numRows; row++) {
+                let yAbove = centerY - row * yOffset - direction * col * yRowOffset; // Y-Position des Hexagons über dem mittleren
+                let yBelow = centerY + row * yOffset - direction * col * yRowOffset; // Y-Position des Hexagons unter dem mittleren
+
+                let x = centerX + col * xOffset; // Hier verwenden wir den Spaltenindex für die Verschiebung
+
+                let hexAbove = new Hexagon(x, yAbove, -row, col, fillColor, borderColor, textColor);
+                hexAbove.drawHexagon(0, 0, hexagonRadius);
+
+                let hexBelow = new Hexagon(x, yBelow, row, col, fillColor, borderColor, textColor);
+                hexBelow.drawHexagon(0, 0, hexagonRadius);
+
+                hexagoneArray.push(hexAbove);
+                hexagoneArray.push(hexBelow);
+            }
+        }
+    }
+
+    // Klasse für Hexagon
+    class Hexagon {
+        constructor(x, y, row, col, fillColor, borderColor, textColor) {
+            this.x = x;
+            this.y = y;
+            this.row = row;
+            this.col = col;
+            this.fillColor = fillColor;
+            this.borderColor = borderColor;
+            this.textColor = textColor;
+        }
+
+        drawHexagon(xOffset, yOffset, size) {
+            let centerX = this.x + xOffset;
+            let centerY = this.y + yOffset;
+
+            context.beginPath();
+            context.moveTo(centerX + size * Math.cos(0), centerY + size * Math.sin(0));
+
+            for (let i = 1; i <= 6; i++) {
+                context.lineTo(centerX + size * Math.cos(i * 2 * Math.PI / 6), centerY + size * Math.sin(i * 2 * Math.PI / 6));
+            }
+
+            context.closePath();
+            context.lineWidth = 2;
+            context.fillStyle = this.fillColor;
+            context.strokeStyle = this.borderColor;
+            context.fill();
+            context.stroke();
+
+            // Text innerhalb des Hexagons
+            context.fillStyle = this.textColor;
+            context.font = "10px Arial";
+            context.fillText("Row: " + this.row + ", Col: " + this.col, centerX - 30, centerY);
+        }
+    }
+
+    // Bei Änderungen der Fenstergröße das Canvas neu zeichnen
+    window.addEventListener('resize', resizeCanvas);
+
+    // Initial das Canvas erstellen
+    resizeCanvas();
+</script>
+</body>
 </html>
-    
