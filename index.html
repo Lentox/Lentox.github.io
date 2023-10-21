@@ -1,17 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta charset="utf-8">
     <title></title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@1,700&display=swap');
+
         body {
             margin: 0;
             overflow: hidden;
             background-color: lightgray;
+            font-family: sans-serif;
         }
 
         canvas {
             position: absolute;
         }
+
     </style>
 </head>
 <body>
@@ -23,6 +28,15 @@
 
     // Globale
     let hexagoneArray = [];
+    let hexagonFillColorLight = "rgb(194, 194, 163)";
+    let hexagonBorderColorLight = "rgb(214, 214, 194)";
+    let hexagonFillColorDark = "rgb(38, 38, 38)";
+    let hexagonBorderColorDark = "rgb(51, 51, 51)"
+    let darkmode = false;
+
+    //Digital Clock Globals
+    let clock;
+
     // Funktion, um Canvas-Größe an die Fenstergröße anzupassen
     function resizeCanvas() {
         canvas.width = window.innerWidth;
@@ -32,6 +46,53 @@
         drawHexagons();
         drawSocialMediaFields();
         drawNavFields();
+        digitalClock();
+        modeSlider();
+    }
+
+    function modeSlider(){
+        const positions = [
+            { sourceRow: 13, sourceCol: 14, targetRow: 9, targetCol: 10}
+        ];
+
+        positions.forEach(position => {
+            const sourceHexagon = findHexagonByPosition(hexagoneArray, position.sourceRow, position.sourceCol);
+            const targetHexagon = findHexagonByPosition(hexagoneArray, position.targetRow, position.targetCol);
+
+            if (sourceHexagon && isHexagonVisible(sourceHexagon)) {
+                sourceHexagon.fillColor = "rgb(194, 194, 163)";
+                sourceHexagon.drawModeHexagon(0, 0, 40);
+            } else if (targetHexagon && isHexagonVisible(targetHexagon)) {
+                targetHexagon.fillColor = "rgb(194, 194, 163)";
+                targetHexagon.drawModeHexagon(0, 0, 40);
+            }
+        });
+    }
+
+    function digitalClock(){
+
+        // Digital Clock
+        setInterval(() => {
+            let time = new Date();
+            let hours = time.getHours();
+            let minutes = time.getMinutes();
+            let seconds = time.getSeconds();
+
+            // Prepending 0 if less than 10
+            hours = hours === 9 ? hours : "0" + hours;
+            minutes = minutes > 9 ? minutes : "0" + minutes;
+            seconds = seconds > 9 ? seconds : "0" + seconds;
+
+
+            // Verwenden Sie die Clock-Klasse
+            clock = new Clock();
+
+            // Setzen Sie die Stunden, Minuten und Sekunden mit den Settern
+            clock.hours = hours;
+            clock.minutes = minutes;
+            clock.seconds = seconds;
+        }, 1000);
+
     }
 
     function drawNavFields() {
@@ -47,10 +108,18 @@
             const targetHexagon = findHexagonByPosition(hexagoneArray, position.targetRow, position.targetCol);
 
             if (sourceHexagon && isHexagonVisible(sourceHexagon)) {
-                sourceHexagon.fillColor = "blue";
-                sourceHexagon.drawHexagon(0, 0, 40);
+                if (!darkmode){
+                    sourceHexagon.fillColor = hexagonFillColorLight;
+                    sourceHexagon.borderColor = hexagonBorderColorLight;
+                    sourceHexagon.drawHexagon(0, 0, 40);
+                }else{
+                    sourceHexagon.fillColor = hexagonFillColorDark;
+                    sourceHexagon.borderColor = hexagonBorderColorDark;
+                    sourceHexagon.drawHexagon(0, 0, 40);
+                }
+
             } else if (targetHexagon && isHexagonVisible(targetHexagon)) {
-                targetHexagon.fillColor = "blue";
+                targetHexagon.fillColor = "rgb(194, 194, 163)";
                 targetHexagon.drawHexagon(0, 0, 40);
             }
         });
@@ -67,12 +136,14 @@
             const sourceHexagon = findHexagonByPosition(hexagoneArray, position.sourceRow, position.sourceCol);
             const targetHexagon = findHexagonByPosition(hexagoneArray, position.targetRow, position.targetCol);
 
-            if (sourceHexagon && isHexagonVisible(sourceHexagon)) {
-                sourceHexagon.fillColor = "blue";
+            if (!darkmode){
+                sourceHexagon.fillColor = hexagonFillColorLight;
+                sourceHexagon.borderColor = hexagonBorderColorLight;
                 sourceHexagon.drawHexagon(0, 0, 40);
-            } else if (targetHexagon && isHexagonVisible(targetHexagon)) {
-                targetHexagon.fillColor = "blue";
-                targetHexagon.drawHexagon(0, 0, 40);
+            }else{
+                sourceHexagon.fillColor = hexagonFillColorDark;
+                sourceHexagon.borderColor = hexagonBorderColorDark;
+                sourceHexagon.drawHexagon(0, 0, 40);
             }
         });
     }
@@ -98,9 +169,17 @@
         let centerX = canvas.width / 2;
         let centerY = canvas.height / 2;
 
-        let fillColor = "lightblue";
-        let borderColor = "blue";
+        let fillColor = "rgb(38, 38, 38)";
+        let borderColor = "rgb(51, 51, 51)";
         let textColor = "white";
+
+        if (darkmode){
+            fillColor = hexagonFillColorLight;
+            borderColor = hexagonBorderColorLight;
+        }else{
+            fillColor = hexagonFillColorDark;
+            borderColor = hexagonBorderColorDark;
+        }
 
         let numRows = Math.floor((canvas.height - hexagonRadius) / (hexagonRadius * 1.5));
         let numCols = Math.floor((canvas.width - hexagonRadius) / (hexagonRadius * 1.5));
@@ -138,19 +217,201 @@
         }
     }
 
+    class Clock {
+        constructor() {
+            this._hours = 0;
+            this._minutes = 0;
+            this._seconds = 0;
+        }
+
+        // Getter für Stunden
+        get hours() {
+            return this._hours;
+        }
+
+        // Setter für Stunden mit Event-Auslösung
+        set hours(value) {
+            if (this._hours !== value) {
+                this._hours = value;
+                this.onHoursChange(); // Hier wird das Event ausgelöst
+            }
+        }
+
+        // Getter für Minuten
+        get minutes() {
+            return this._minutes;
+        }
+
+        // Setter für Minuten mit Event-Auslösung
+        set minutes(value) {
+            if (this._minutes !== value) {
+                this._minutes = value;
+                this.onMinutesChange(); // Hier wird das Event ausgelöst
+            }
+        }
+
+        // Getter für Sekunden
+        get seconds() {
+            return this._seconds;
+        }
+
+        // Setter für Sekunden mit Event-Auslösung
+        set seconds(value) {
+            if (this._seconds !== value) {
+                this._seconds = value;
+                this.onSecondsChange(); // Hier wird das Event ausgelöst
+            }
+        }
+
+        // Event-Handler für Stundenänderungen
+        onHoursChange() {
+            // Hier können Sie den Code ausführen, den Sie benötigen, wenn sich die Stunden ändern.
+            for (let i = 0; i < hexagoneArray.length; i++) {
+                if (hexagoneArray[i].row === -2 && hexagoneArray[i].col === -4){
+                    hexagoneArray[i].drawHoursHexagon(0,0,40);
+                }
+            }
+        }
+
+        // Event-Handler für Minutenänderungen
+        onMinutesChange() {
+            // Hier können Sie den Code ausführen, den Sie benötigen, wenn sich die Minuten ändern.
+            for (let i = 0; i < hexagoneArray.length; i++) {
+                if (hexagoneArray[i].row === 0 && hexagoneArray[i].col === 0){
+                    hexagoneArray[i].drawMinutesHexagon(0,0,40);
+                }
+            }
+        }
+
+        // Event-Handler für Sekundenänderungen
+        onSecondsChange() {
+            // Hier können Sie den Code ausführen, den Sie benötigen, wenn sich die Sekunden ändern.
+            for (let i = 0; i < hexagoneArray.length; i++) {
+                if (hexagoneArray[i].row === 2 && hexagoneArray[i].col === 4){
+                    hexagoneArray[i].drawSecondsHexagon(0,0,40);
+                }
+            }
+        }
+    }
+
+
     // Klasse für Hexagon
     class Hexagon {
-        constructor(x, y, row, col, fillColor, borderColor, textColor) {
+        constructor(x, y, row, col, fillColor, borderColor) {
             this.x = x;
             this.y = y;
             this.row = row;
             this.col = col;
             this.fillColor = fillColor;
             this.borderColor = borderColor;
-            this.textColor = textColor;
         }
 
         drawHexagon(xOffset, yOffset, size) {
+            let centerX = this.x + xOffset;
+            let centerY = this.y + yOffset;
+
+            context.beginPath();
+            context.moveTo(centerX + size * Math.cos(0), centerY + size * Math.sin(0));
+
+            for (let i = 1; i <= 6; i++) {
+                context.lineTo(centerX + size * Math.cos(i * 2 * Math.PI / 6), centerY + size * Math.sin(i * 2 * Math.PI / 6));
+            }
+
+                context.closePath();
+                context.lineWidth = 2;
+                context.fillStyle = this.fillColor;
+                context.strokeStyle = this.borderColor;
+                context.fill();
+                context.stroke();
+
+        }
+
+        drawHoursHexagon(xOffset, yOffset, size) {
+            let centerX = this.x + xOffset;
+            let centerY = this.y + yOffset;
+
+            context.beginPath();
+            context.moveTo(centerX + size * Math.cos(0), centerY + size * Math.sin(0));
+
+            for (let i = 1; i <= 6; i++) {
+                context.lineTo(centerX + size * Math.cos(i * 2 * Math.PI / 6), centerY + size * Math.sin(i * 2 * Math.PI / 6));
+            }
+
+
+                context.closePath();
+                context.lineWidth = 5;
+                context.strokeStyle = "rgb(194, 194, 163)";
+                context.fillStyle = "rgb(38, 38, 38)";
+                context.fill();
+                context.stroke();
+
+                const textMetrics = context.measureText(clock._hours);
+                const textWidth = textMetrics.width;
+
+                // Text innerhalb des Hexagons
+                context.fillStyle = "rgb(194, 194, 163)";
+                context.font = "30px 'Ubuntu', sans-serif";
+                context.fillText(clock._hours,centerX - textWidth / 2, centerY + 10);
+
+        }
+
+        drawMinutesHexagon(xOffset, yOffset, size) {
+            let centerX = this.x + xOffset;
+            let centerY = this.y + yOffset;
+
+            context.beginPath();
+            context.moveTo(centerX + size * Math.cos(0), centerY + size * Math.sin(0));
+
+            for (let i = 1; i <= 6; i++) {
+                context.lineTo(centerX + size * Math.cos(i * 2 * Math.PI / 6), centerY + size * Math.sin(i * 2 * Math.PI / 6));
+            }
+
+            context.closePath();
+            context.lineWidth = 5;
+            context.strokeStyle = "rgb(194, 194, 163)";
+            context.fillStyle = "rgb(38, 38, 38)";
+            context.fill();
+            context.stroke();
+
+            const textMetrics = context.measureText(clock._minutes);
+            const textWidth = textMetrics.width;
+
+            // Text innerhalb des Hexagons
+            context.fillStyle = "rgb(194, 194, 163)";
+            context.font = "30px 'Ubuntu', sans-serif";
+            context.fillText(clock._minutes,centerX - textWidth / 2, centerY + 10);
+        }
+
+        drawSecondsHexagon(xOffset, yOffset, size) {
+            let centerX = this.x + xOffset;
+            let centerY = this.y + yOffset;
+
+            context.beginPath();
+            context.moveTo(centerX + size * Math.cos(0), centerY + size * Math.sin(0));
+
+            for (let i = 1; i <= 6; i++) {
+                context.lineTo(centerX + size * Math.cos(i * 2 * Math.PI / 6), centerY + size * Math.sin(i * 2 * Math.PI / 6));
+            }
+
+                context.closePath();
+                context.lineWidth = 5;
+                context.strokeStyle = "rgb(194, 194, 163)";
+                context.fillStyle = "rgb(38, 38, 38)";
+                context.fill();
+                context.stroke();
+
+                const textMetrics = context.measureText(clock._seconds);
+                const textWidth = textMetrics.width;
+
+                // Text innerhalb des Hexagons
+                context.fillStyle = "rgb(194, 194, 163)";
+                context.font = "30px 'Ubuntu', sans-serif";
+                context.fillText(clock._seconds, centerX - textWidth / 2, centerY + 10);
+
+
+        }
+
+        drawModeHexagon(xOffset, yOffset, size) {
             let centerX = this.x + xOffset;
             let centerY = this.y + yOffset;
 
@@ -167,13 +428,56 @@
             context.strokeStyle = this.borderColor;
             context.fill();
             context.stroke();
+            const textMetrics = context.measureText("☯");
+            const textWidth = textMetrics.width;
 
             // Text innerhalb des Hexagons
-            context.fillStyle = this.textColor;
-            context.font = "10px Arial";
-            context.fillText("Row: " + this.row + ", Col: " + this.col, centerX - 30, centerY);
+            context.fillStyle = "rgb(38, 38, 38)";
+            context.font = "40px 'Ubuntu', sans-serif";
+            context.fillText("☯", centerX - textWidth - 7, centerY + 15);
         }
     }
+
+    // Event-Listener für Klicks auf das Canvas
+    canvas.addEventListener("click", function(event) {
+        let x = 0;
+        let y = 0;
+
+        for (let i = 0; i < hexagoneArray.length; i++) {
+            if (hexagoneArray[i].row === 13 && hexagoneArray[i].col === 14){
+                x = hexagoneArray[i].x;
+                y = hexagoneArray[i].y;
+
+                // Überprüfen, ob der Mausklick auf das Hexagon zeigt
+                const dx = event.offsetX - x;
+                const dy = event.offsetY - y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+
+                if (distance <= 40) {
+                    // Der Klick war innerhalb des Hexagons
+                    // Hier können Sie den Code ausführen, der auf den Klick reagiert
+                    darkmode = !darkmode;
+                    resizeCanvas();
+                }
+                break;
+            }
+        }
+    });
+
+    // Event-Listener für das "mouseenter"-Event (Mauszeiger betritt das Canvas)
+    canvas.addEventListener("mouseenter", function(event) {
+        // Code, der ausgeführt wird, wenn der Mauszeiger das Canvas betritt
+        const x = event.offsetX;
+        const y = event.offsetY;
+        for (let i = 0; i < hexagoneArray.length; i++) {
+
+        }
+    });
+
+    // Event-Listener für das "mouseleave"-Event (Mauszeiger verlässt das Canvas)
+    canvas.addEventListener("mouseleave", function(event) {
+        // Code, der ausgeführt wird, wenn der Mauszeiger das Canvas verlässt
+    });
 
     // Bei Änderungen der Fenstergröße das Canvas neu zeichnen
     window.addEventListener('resize', resizeCanvas);
