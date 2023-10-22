@@ -29,10 +29,12 @@
     // Globale
     let hexagoneArray = [];
     let hexagonFillColorLight = "rgb(194, 194, 163)";
-    let hexagonBorderColorLight = "rgb(214, 214, 194)";
+    let hexagonBorderColorLight = "rgb(184, 184, 148)";
     let hexagonFillColorDark = "rgb(38, 38, 38)";
     let hexagonBorderColorDark = "rgb(51, 51, 51)"
     let darkmode = false;
+    let iconsNavArray = ['⌂','{}','♟','?'];
+    let counter = 0;
 
     //Digital Clock Globals
     let clock;
@@ -79,7 +81,7 @@
             let seconds = time.getSeconds();
 
             // Prepending 0 if less than 10
-            hours = hours === 9 ? hours : "0" + hours;
+            hours = hours > 9 ? hours : "0" + hours;
             minutes = minutes > 9 ? minutes : "0" + minutes;
             seconds = seconds > 9 ? seconds : "0" + seconds;
 
@@ -111,16 +113,16 @@
                 if (!darkmode){
                     sourceHexagon.fillColor = hexagonFillColorLight;
                     sourceHexagon.borderColor = hexagonBorderColorLight;
-                    sourceHexagon.drawHexagon(0, 0, 40);
+                    sourceHexagon.drawNavHexagon(0, 0, 40);
                 }else{
                     sourceHexagon.fillColor = hexagonFillColorDark;
                     sourceHexagon.borderColor = hexagonBorderColorDark;
-                    sourceHexagon.drawHexagon(0, 0, 40);
+                    sourceHexagon.drawNavHexagon(0, 0, 40);
                 }
 
             } else if (targetHexagon && isHexagonVisible(targetHexagon)) {
                 targetHexagon.fillColor = "rgb(194, 194, 163)";
-                targetHexagon.drawHexagon(0, 0, 40);
+                targetHexagon.drawNavHexagon(0, 0, 40);
             }
         });
     }
@@ -337,21 +339,38 @@
                 context.lineTo(centerX + size * Math.cos(i * 2 * Math.PI / 6), centerY + size * Math.sin(i * 2 * Math.PI / 6));
             }
 
+                if (darkmode){
+                    context.closePath();
+                    context.lineWidth = 5;
+                    context.strokeStyle = "rgb(38, 38, 38)";
+                    context.fillStyle = "rgb(194, 194, 163)";
+                    context.fill();
+                    context.stroke();
 
-                context.closePath();
-                context.lineWidth = 5;
-                context.strokeStyle = "rgb(194, 194, 163)";
-                context.fillStyle = "rgb(38, 38, 38)";
-                context.fill();
-                context.stroke();
+                    const textMetrics = context.measureText(clock._hours);
+                    const textWidth = textMetrics.width;
 
-                const textMetrics = context.measureText(clock._hours);
-                const textWidth = textMetrics.width;
+                    // Text innerhalb des Hexagons
+                    context.fillStyle = "rgb(38, 38, 38)";
+                    context.font = "30px 'Ubuntu', sans-serif";
+                    context.fillText(clock._hours,centerX - textWidth / 2, centerY + 10);
+                }else{
+                    context.closePath();
+                    context.lineWidth = 5;
+                    context.strokeStyle = "rgb(194, 194, 163)";
+                    context.fillStyle = "rgb(38, 38, 38)";
+                    context.fill();
+                    context.stroke();
 
-                // Text innerhalb des Hexagons
-                context.fillStyle = "rgb(194, 194, 163)";
-                context.font = "30px 'Ubuntu', sans-serif";
-                context.fillText(clock._hours,centerX - textWidth / 2, centerY + 10);
+                    const textMetrics = context.measureText(clock._hours);
+                    const textWidth = textMetrics.width;
+
+                    // Text innerhalb des Hexagons
+                    context.fillStyle = "rgb(194, 194, 163)";
+                    context.font = "30px 'Ubuntu', sans-serif";
+                    context.fillText(clock._hours,centerX - textWidth / 2, centerY + 10);
+                }
+
 
         }
 
@@ -366,20 +385,37 @@
                 context.lineTo(centerX + size * Math.cos(i * 2 * Math.PI / 6), centerY + size * Math.sin(i * 2 * Math.PI / 6));
             }
 
-            context.closePath();
-            context.lineWidth = 5;
-            context.strokeStyle = "rgb(194, 194, 163)";
-            context.fillStyle = "rgb(38, 38, 38)";
-            context.fill();
-            context.stroke();
+            if (darkmode){
+                context.closePath();
+                context.lineWidth = 5;
+                context.strokeStyle = "rgb(38, 38, 38)";
+                context.fillStyle = "rgb(194, 194, 163)";
+                context.fill();
+                context.stroke();
 
-            const textMetrics = context.measureText(clock._minutes);
-            const textWidth = textMetrics.width;
+                const textMetrics = context.measureText(clock.minutes);
+                const textWidth = textMetrics.width;
 
-            // Text innerhalb des Hexagons
-            context.fillStyle = "rgb(194, 194, 163)";
-            context.font = "30px 'Ubuntu', sans-serif";
-            context.fillText(clock._minutes,centerX - textWidth / 2, centerY + 10);
+                // Text innerhalb des Hexagons
+                context.fillStyle = "rgb(38, 38, 38)";
+                context.font = "30px 'Ubuntu', sans-serif";
+                context.fillText(clock.minutes,centerX - textWidth / 2, centerY + 10);
+            }else{
+                context.closePath();
+                context.lineWidth = 5;
+                context.strokeStyle = "rgb(194, 194, 163)";
+                context.fillStyle = "rgb(38, 38, 38)";
+                context.fill();
+                context.stroke();
+
+                const textMetrics = context.measureText(clock.minutes);
+                const textWidth = textMetrics.width;
+
+                // Text innerhalb des Hexagons
+                context.fillStyle = "rgb(194, 194, 163)";
+                context.font = "30px 'Ubuntu', sans-serif";
+                context.fillText(clock.minutes,centerX - textWidth / 2, centerY + 10);
+            }
         }
 
         drawSecondsHexagon(xOffset, yOffset, size) {
@@ -393,6 +429,22 @@
                 context.lineTo(centerX + size * Math.cos(i * 2 * Math.PI / 6), centerY + size * Math.sin(i * 2 * Math.PI / 6));
             }
 
+            if (darkmode){
+                context.closePath();
+                context.lineWidth = 5;
+                context.strokeStyle = "rgb(38, 38, 38)";
+                context.fillStyle = "rgb(194, 194, 163)";
+                context.fill();
+                context.stroke();
+
+                const textMetrics = context.measureText(clock.seconds);
+                const textWidth = textMetrics.width;
+
+                // Text innerhalb des Hexagons
+                context.fillStyle = "rgb(38, 38, 38)";
+                context.font = "30px 'Ubuntu', sans-serif";
+                context.fillText(clock.seconds,centerX - textWidth / 2, centerY + 10);
+            }else{
                 context.closePath();
                 context.lineWidth = 5;
                 context.strokeStyle = "rgb(194, 194, 163)";
@@ -400,13 +452,14 @@
                 context.fill();
                 context.stroke();
 
-                const textMetrics = context.measureText(clock._seconds);
+                const textMetrics = context.measureText(clock.seconds);
                 const textWidth = textMetrics.width;
 
                 // Text innerhalb des Hexagons
                 context.fillStyle = "rgb(194, 194, 163)";
                 context.font = "30px 'Ubuntu', sans-serif";
-                context.fillText(clock._seconds, centerX - textWidth / 2, centerY + 10);
+                context.fillText(clock.seconds,centerX - textWidth / 2, centerY + 10);
+            }
 
 
         }
@@ -422,20 +475,81 @@
                 context.lineTo(centerX + size * Math.cos(i * 2 * Math.PI / 6), centerY + size * Math.sin(i * 2 * Math.PI / 6));
             }
 
-            context.closePath();
-            context.lineWidth = 2;
-            context.fillStyle = this.fillColor;
-            context.strokeStyle = this.borderColor;
-            context.fill();
-            context.stroke();
-            const textMetrics = context.measureText("☯");
-            const textWidth = textMetrics.width;
+            if (darkmode){
+                context.closePath();
+                context.lineWidth = 2;
+                context.fillStyle = hexagonFillColorDark;
+                context.strokeStyle = this.borderColor;
+                context.fill();
+                context.stroke();
+                const textMetrics = context.measureText("☯");
+                const textWidth = textMetrics.width;
 
-            // Text innerhalb des Hexagons
-            context.fillStyle = "rgb(38, 38, 38)";
-            context.font = "40px 'Ubuntu', sans-serif";
-            context.fillText("☯", centerX - textWidth - 7, centerY + 15);
+                // Text innerhalb des Hexagons
+                context.fillStyle = hexagonFillColorLight;
+                context.font = "40px 'Ubuntu', sans-serif";
+                context.fillText("☯", centerX - textWidth - 7, centerY + 15);
+            }else{
+                context.closePath();
+                context.lineWidth = 2;
+                context.fillStyle = this.fillColor;
+                context.strokeStyle = this.borderColor;
+                context.fill();
+                context.stroke();
+                const textMetrics = context.measureText("☯");
+                const textWidth = textMetrics.width;
+
+                // Text innerhalb des Hexagons
+                context.fillStyle = "rgb(38, 38, 38)";
+                context.font = "40px 'Ubuntu', sans-serif";
+                context.fillText("☯", centerX - textWidth - 7, centerY + 15);
+            }
+
         }
+
+        drawNavHexagon(xOffset, yOffset, size) {
+            let centerX = this.x + xOffset;
+            let centerY = this.y + yOffset;
+
+            context.beginPath();
+            context.moveTo(centerX + size * Math.cos(0), centerY + size * Math.sin(0));
+
+            for (let i = 1; i <= 6; i++) {
+                context.lineTo(centerX + size * Math.cos(i * 2 * Math.PI / 6), centerY + size * Math.sin(i * 2 * Math.PI / 6));
+            }
+            if (darkmode){
+                context.closePath();
+                context.lineWidth = 2;
+                context.fillStyle = hexagonFillColorDark;
+                context.strokeStyle = this.borderColor;
+                context.fill();
+                context.stroke();
+                const textMetrics = context.measureText(iconsNavArray[counter]);
+                const textWidth = textMetrics.width;
+
+                // Text innerhalb des Hexagons
+                context.fillStyle = hexagonFillColorLight;
+                context.font = "50px 'Ubuntu', sans-serif";
+                context.fillText(iconsNavArray[counter], centerX - textWidth - 7, centerY + 15);
+            }else{
+                context.closePath();
+                context.lineWidth = 2;
+                context.fillStyle = this.fillColor;
+                context.strokeStyle = this.borderColor;
+                context.fill();
+                context.stroke();
+                const textMetrics = context.measureText(iconsNavArray[counter]);
+                const textWidth = textMetrics.width;
+
+                // Text innerhalb des Hexagons
+                context.fillStyle = "rgb(38, 38, 38)";
+                context.font = "50px 'Ubuntu', sans-serif";
+                context.fillText(iconsNavArray[counter], centerX - textWidth - 7, centerY + 15);
+            }
+            counter++;
+
+        }
+
     }
 
     // Event-Listener für Klicks auf das Canvas
