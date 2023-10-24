@@ -30,7 +30,6 @@ class Hexagon {
         context.strokeStyle = this.borderColor;
         context.fill();
         context.stroke();
-
     }
 
     drawClock(value) {

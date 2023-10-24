@@ -40,13 +40,13 @@ function handleCanvasClick(event) {
     let y = 0;
 
     for (let i = 0; i < hexagoneArray.length; i++) {
+        x = hexagoneArray[i].x;
+        y = hexagoneArray[i].y;
+        const dx = event.offsetX - x;
+        const dy = event.offsetY - y;
+        // Klick, auf DarkmodeButton
         if (hexagoneArray[i].row === 13 && hexagoneArray[i].col === 14){
-            x = hexagoneArray[i].x;
-            y = hexagoneArray[i].y;
-
             // Überprüfen, ob der Mausklick auf das Hexagon zeigt
-            const dx = event.offsetX - x;
-            const dy = event.offsetY - y;
             const distance = Math.sqrt(dx * dx + dy * dy);
 
             if (distance <= 40) {
@@ -55,7 +55,33 @@ function handleCanvasClick(event) {
                 counter = 0;
                 resizeCanvas();
             }
-            break;
+        }
+        // Klick, auf Github Button
+        if (hexagoneArray[i].row === 6 && hexagoneArray[i].col === 0){
+            // Überprüfen, ob der Mausklick auf das Hexagon zeigt
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            if (distance <= 40) {
+                // Der Klick war innerhalb des Hexagons
+                window.open("https://github.com/Lentox", "_blank");
+            }
+        }
+        // Klick, auf LinkedIn Button
+        if (hexagoneArray[i].row === 5 && hexagoneArray[i].col === -2){
+            // Überprüfen, ob der Mausklick auf das Hexagon zeigt
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            if (distance <= 40) {
+                // Der Klick war innerhalb des Hexagons
+                window.open("https://www.linkedin.com/in/tom-esser", "_blank");
+            }
+        }
+        // Klick, auf Instagram Button
+        if (hexagoneArray[i].row === 7 && hexagoneArray[i].col === 2){
+            // Überprüfen, ob der Mausklick auf das Hexagon zeigt
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            if (distance <= 40) {
+                // Der Klick war innerhalb des Hexagons
+                window.open("https://www.instagram.com/t.esser_", "_blank");
+            }
         }
     }
 }
