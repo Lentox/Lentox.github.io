@@ -1,4 +1,8 @@
 // hexagons.js
+let centerX;
+let centerY;
+
+let count;
 class Hexagon {
     constructor(x, y, row, col, fillColor, borderColor) {
         this.x = x;
@@ -9,9 +13,9 @@ class Hexagon {
         this.borderColor = borderColor;
     }
 
-    drawHexagon(xOffset, yOffset, size) {
-        let centerX = this.x + xOffset;
-        let centerY = this.y + yOffset;
+    drawHexagon() {
+        centerX = this.x;
+        centerY = this.y;
 
         context.beginPath();
         context.moveTo(centerX + size * Math.cos(0), centerY + size * Math.sin(0));
@@ -29,9 +33,9 @@ class Hexagon {
 
     }
 
-    drawHexagonClock(xOffset, yOffset, size, value) {
-        let centerX = this.x + xOffset;
-        let centerY = this.y + yOffset;
+    drawClock(value) {
+        centerX = this.x;
+        centerY = this.y;
 
         context.beginPath();
         context.moveTo(centerX + size * Math.cos(0), centerY + size * Math.sin(0));
@@ -46,118 +50,39 @@ class Hexagon {
         if (darkmode) {
             context.closePath();
             context.lineWidth = 5;
-            context.strokeStyle = "rgb(38, 38, 38)";
-            context.fillStyle = "rgb(194, 194, 163)";
+            context.strokeStyle = hexagonFillColorDark;
+            context.fillStyle = hexagonFillColorLight;
             context.fill();
             context.stroke();
 
             // Text innerhalb des Hexagons
-            context.fillStyle = "rgb(38, 38, 38)";
+            context.fillStyle = hexagonFillColorDark;
         } else {
             context.closePath();
             context.lineWidth = 5;
-            context.strokeStyle = "rgb(194, 194, 163)";
-            context.fillStyle = "rgb(38, 38, 38)";
+            context.strokeStyle = hexagonFillColorLight;
+            context.fillStyle = hexagonFillColorDark;
             context.fill();
             context.stroke();
 
             // Text innerhalb des Hexagons
-            context.fillStyle = "rgb(194, 194, 163)";
+            context.fillStyle = hexagonFillColorLight;
         }
 
         context.font = "30px 'Ubuntu', sans-serif";
-        context.fillText(value, centerX - textWidth / 2, centerY + 10);
+        context.fillText(value, centerX - (textWidth / 2), centerY + 10);
     }
 
-    drawHoursHexagon(xOffset, yOffset, size) {
-        this.drawHexagonClock.call(this, xOffset, yOffset, size, clock.hours);
+    drawHoursHexagon() {
+        this.drawClock.call(this, clock.hours);
     }
 
-    drawMinutesHexagon(xOffset, yOffset, size) {
-        this.drawHexagonClock.call(this, xOffset, yOffset, size, clock.minutes);
+    drawMinutesHexagon() {
+        this.drawClock.call(this, clock.minutes);
     }
 
-    drawSecondsHexagon(xOffset, yOffset, size) {
-        this.drawHexagonClock.call(this, xOffset, yOffset, size, clock.seconds);
-    }
-
-
-    drawModeHexagon(xOffset, yOffset, size) {
-        let centerX = this.x + xOffset;
-        let centerY = this.y + yOffset;
-
-        context.beginPath();
-        context.moveTo(centerX + size * Math.cos(0), centerY + size * Math.sin(0));
-
-        for (let i = 1; i <= 6; i++) {
-            context.lineTo(centerX + size * Math.cos(i * 2 * Math.PI / 6), centerY + size * Math.sin(i * 2 * Math.PI / 6));
-        }
-
-        if (darkmode){
-            context.closePath();
-            context.lineWidth = 2;
-            context.fillStyle = hexagonFillColorDark;
-            context.strokeStyle = this.borderColor;
-            context.fill();
-            context.stroke();
-
-            // Text innerhalb des Hexagons
-            context.fillStyle = hexagonFillColorLight;
-            context.font = "40px 'Ubuntu', sans-serif";
-            context.fillText("☯", centerX - 17, centerY + 15);
-        }else{
-            context.closePath();
-            context.lineWidth = 2;
-            context.fillStyle = this.fillColor;
-            context.strokeStyle = this.borderColor;
-            context.fill();
-            context.stroke();
-
-            // Text innerhalb des Hexagons
-            context.fillStyle = "rgb(38, 38, 38)";
-            context.font = "40px 'Ubuntu', sans-serif";
-            context.fillText("☯", centerX - 17, centerY + 15);
-        }
-
-    }
-
-    drawNavHexagon(xOffset, yOffset, size) {
-        let centerX = this.x + xOffset;
-        let centerY = this.y + yOffset;
-
-        context.beginPath();
-        context.moveTo(centerX + size * Math.cos(0), centerY + size * Math.sin(0));
-
-        for (let i = 1; i <= 6; i++) {
-            context.lineTo(centerX + size * Math.cos(i * 2 * Math.PI / 6), centerY + size * Math.sin(i * 2 * Math.PI / 6));
-        }
-        if (darkmode){
-            context.closePath();
-            context.lineWidth = 5;
-            context.fillStyle = hexagonFillColorDark;
-            context.strokeStyle = this.borderColor;
-            context.fill();
-            context.stroke();
-
-            // Text innerhalb des Hexagons
-            context.fillStyle = hexagonFillColorLight;
-            context.font = "50px 'Ubuntu', sans-serif";
-            context.fillText(iconsNavArray[counter], centerX - 15, centerY + 15);
-        }else{
-            context.closePath();
-            context.lineWidth = 5;
-            context.fillStyle = this.fillColor;
-            context.strokeStyle = this.borderColor;
-            context.fill();
-            context.stroke();
-
-            // Text innerhalb des Hexagons
-            context.fillStyle = hexagonFillColorDark;
-            context.font = "50px 'Ubuntu', sans-serif";
-            context.fillText(iconsNavArray[counter], centerX - 15, centerY + 15);
-        }
-        counter++;
-
+    drawSecondsHexagon() {
+        this.drawClock.call(this, clock.seconds);
     }
 
 }
@@ -169,7 +94,7 @@ function drawNavFields() {
         { sourceRow: -7, sourceCol: -3, targetRow: -5, targetCol: -3 },
         { sourceRow: -4, sourceCol: 3, targetRow: -2, targetCol: 3 }
     ];
-
+    count = 0;
     positions.forEach(position => {
         const sourceHexagon = findHexagonByPosition(hexagoneArray, position.sourceRow, position.sourceCol);
         const targetHexagon = findHexagonByPosition(hexagoneArray, position.targetRow, position.targetCol);
@@ -178,17 +103,36 @@ function drawNavFields() {
             if (!darkmode){
                 sourceHexagon.fillColor = hexagonFillColorLight;
                 sourceHexagon.borderColor = hexagonFillColorDark;
-                sourceHexagon.drawNavHexagon(0, 0, 40);
+                sourceHexagon.drawHexagon();
+
+                const image = new Image();
+                image.src = iconsNavArrayDark[count]; // Geben Sie den Pfad zu Ihrem Bild an.
+
+                // 3. Stellen Sie sicher, dass das Bild geladen ist, bevor Sie es auf die Canvas zeichnen.
+                image.onload = function() {
+                    // 4. Zeichnen Sie das Bild auf die Canvas.
+                    context.drawImage(image, sourceHexagon.x - 20, sourceHexagon.y - 20, 40, 40); // (Bild, x-Koordinate, y-Koordinate)
+                };
             }else{
                 sourceHexagon.fillColor = hexagonFillColorDark;
                 sourceHexagon.borderColor = hexagonBorderColorDark;
-                sourceHexagon.drawNavHexagon(0, 0, 40);
+                sourceHexagon.drawHexagon();
+
+                const image = new Image();
+                image.src = iconsNavArrayLight[count]; // Geben Sie den Pfad zu Ihrem Bild an.
+
+                // 3. Stellen Sie sicher, dass das Bild geladen ist, bevor Sie es auf die Canvas zeichnen.
+                image.onload = function() {
+                    // 4. Zeichnen Sie das Bild auf die Canvas.
+                    context.drawImage(image, sourceHexagon.x - 20, sourceHexagon.y - 20, 40, 40); // (Bild, x-Koordinate, y-Koordinate)
+                };
             }
 
         } else if (targetHexagon && isHexagonVisible(targetHexagon)) {
             targetHexagon.fillColor = "rgb(194, 194, 163)";
-            targetHexagon.drawNavHexagon(0, 0, 40);
+            targetHexagon.drawHexagon();
         }
+        count++;
     });
 }
 
@@ -198,7 +142,7 @@ function drawSocialMediaFields() {
         { sourceRow: 5, sourceCol: -2, targetRow: 3, targetCol: -2 },
         { sourceRow: 7, sourceCol: 2, targetRow: 5, targetCol: 2 }
     ];
-
+    count = 0;
     positions.forEach(position => {
         const sourceHexagon = findHexagonByPosition(hexagoneArray, position.sourceRow, position.sourceCol);
         const targetHexagon = findHexagonByPosition(hexagoneArray, position.targetRow, position.targetCol);
@@ -206,12 +150,31 @@ function drawSocialMediaFields() {
         if (!darkmode){
             sourceHexagon.fillColor = hexagonFillColorLight;
             sourceHexagon.borderColor = hexagonBorderColorLight;
-            sourceHexagon.drawHexagon(0, 0, 40);
+            sourceHexagon.drawHexagon();
+
+            const image = new Image();
+            image.src = iconsMediaArrayDark[count]; // Geben Sie den Pfad zu Ihrem Bild an.
+
+            // 3. Stellen Sie sicher, dass das Bild geladen ist, bevor Sie es auf die Canvas zeichnen.
+            image.onload = function() {
+                // 4. Zeichnen Sie das Bild auf die Canvas.
+                context.drawImage(image, sourceHexagon.x - 20, sourceHexagon.y - 20, 40, 40); // (Bild, x-Koordinate, y-Koordinate)
+            };
         }else{
             sourceHexagon.fillColor = hexagonFillColorDark;
             sourceHexagon.borderColor = hexagonBorderColorDark;
-            sourceHexagon.drawHexagon(0, 0, 40);
+            sourceHexagon.drawHexagon();
+
+            const image = new Image();
+            image.src = iconsMediaArrayLight[count]; // Geben Sie den Pfad zu Ihrem Bild an.
+
+            // 3. Stellen Sie sicher, dass das Bild geladen ist, bevor Sie es auf die Canvas zeichnen.
+            image.onload = function() {
+                // 4. Zeichnen Sie das Bild auf die Canvas.
+                context.drawImage(image, sourceHexagon.x - 20, sourceHexagon.y - 20, 40, 40); // (Bild, x-Koordinate, y-Koordinate)
+            };
         }
+        count++;
     });
 }
 
@@ -247,7 +210,7 @@ function drawHexagons() {
     // Wählen Sie die Verschiebungsrichtung (1 für nach unten, -1 für nach oben)
     let direction = 1;
 
-    // Löschen der bestehenden Hexagon Elemente
+    // Löschen, der bestehenden Hexagon Elemente
     hexagoneArray = [];
 
     for (let col = -numCols; col <= numCols; col++) {
@@ -258,10 +221,10 @@ function drawHexagons() {
             let x = centerX + col * xOffset; // Hier verwenden wir den Spaltenindex für die Verschiebung
 
             let hexAbove = new Hexagon(x, yAbove, -row, col, fillColor, borderColor, textColor);
-            hexAbove.drawHexagon(0, 0, hexagonRadius);
+            hexAbove.drawHexagon();
 
             let hexBelow = new Hexagon(x, yBelow, row, col, fillColor, borderColor, textColor);
-            hexBelow.drawHexagon(0, 0, hexagonRadius);
+            hexBelow.drawHexagon();
 
             hexagoneArray.push(hexAbove);
             hexagoneArray.push(hexBelow);
@@ -276,9 +239,9 @@ function findHexagonByPosition(hexagoneArray, row, col) {
 function isHexagonVisible(hexagon) {
     // Überprüfen, ob das Hexagon innerhalb der sichtbaren Canvas-Fläche ist
     return (
-        hexagon.x + 40 >= 0 &&
-        hexagon.x - 40 <= canvas.width &&
-        hexagon.y + 40 >= 0 &&
-        hexagon.y - 40 <= canvas.height
+        hexagon.x + size >= 0 &&
+        hexagon.x - size <= canvas.width &&
+        hexagon.y + size >= 0 &&
+        hexagon.y - size <= canvas.height
     );
 }

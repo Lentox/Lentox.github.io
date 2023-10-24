@@ -52,7 +52,7 @@ class Clock {
         // Code, der ausgeführt wird, wenn sich die Stunde ändert
         for (let i = 0; i < hexagoneArray.length; i++) {
             if (hexagoneArray[i].row === -2 && hexagoneArray[i].col === -4){
-                hexagoneArray[i].drawHoursHexagon(0,0,40);
+                hexagoneArray[i].drawHoursHexagon();
             }
         }
     }
@@ -62,7 +62,7 @@ class Clock {
         // Code, der ausgeführt wird, wenn sich die Minute ändert
         for (let i = 0; i < hexagoneArray.length; i++) {
             if (hexagoneArray[i].row === 0 && hexagoneArray[i].col === 0){
-                hexagoneArray[i].drawMinutesHexagon(0,0,40);
+                hexagoneArray[i].drawMinutesHexagon();
             }
         }
     }
@@ -72,7 +72,7 @@ class Clock {
         // Code, der ausgeführt wird, wenn sich die Sekunde ändert
         for (let i = 0; i < hexagoneArray.length; i++) {
             if (hexagoneArray[i].row === 2 && hexagoneArray[i].col === 4){
-                hexagoneArray[i].drawSecondsHexagon(0,0,40);
+                hexagoneArray[i].drawSecondsHexagon();
             }
         }
     }
