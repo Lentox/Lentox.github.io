@@ -25,3 +25,8 @@ let iconsMediaArrayLight = ['images/github-icon-light.png','images/linkedin-icon
 
 // Array, für Darkmode Icons
 let iconsDarkModeArray = ['images/sun-icon-light.png','images/sun-icon-dark.png'];
+
+// Postionen, der Hexagone
+let modeHexagonPosition = [{row: null},{col: null}];
+let mediaHexagonPositions = [{row: null},{col: null},{ row: null, col: null },{ row: null, col: null }];
+

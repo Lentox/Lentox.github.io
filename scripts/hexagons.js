@@ -99,40 +99,42 @@ function drawNavFields() {
         const targetHexagon = findHexagonByPosition(hexagoneArray, position.targetRow, position.targetCol);
 
         if (sourceHexagon && isHexagonVisible(sourceHexagon)) {
-            if (!darkmode){
-                sourceHexagon.fillColor = hexagonFillColorLight;
-                sourceHexagon.borderColor = hexagonFillColorDark;
-                sourceHexagon.drawHexagon();
-
-                const image = new Image();
-                image.src = iconsNavArrayDark[count]; // Geben Sie den Pfad zu Ihrem Bild an.
-
-                // 3. Stellen Sie sicher, dass das Bild geladen ist, bevor Sie es auf die Canvas zeichnen.
-                image.onload = function() {
-                    // 4. Zeichnen Sie das Bild auf die Canvas.
-                    context.drawImage(image, sourceHexagon.x - 20, sourceHexagon.y - 20, 40, 40); // (Bild, x-Koordinate, y-Koordinate)
-                };
-            }else{
-                sourceHexagon.fillColor = hexagonFillColorDark;
-                sourceHexagon.borderColor = hexagonBorderColorDark;
-                sourceHexagon.drawHexagon();
-
-                const image = new Image();
-                image.src = iconsNavArrayLight[count]; // Geben Sie den Pfad zu Ihrem Bild an.
-
-                // 3. Stellen Sie sicher, dass das Bild geladen ist, bevor Sie es auf die Canvas zeichnen.
-                image.onload = function() {
-                    // 4. Zeichnen Sie das Bild auf die Canvas.
-                    context.drawImage(image, sourceHexagon.x - 20, sourceHexagon.y - 20, 40, 40); // (Bild, x-Koordinate, y-Koordinate)
-                };
-            }
-
+            drawNavHexagon(sourceHexagon);
         } else if (targetHexagon && isHexagonVisible(targetHexagon)) {
-            targetHexagon.fillColor = "rgb(194, 194, 163)";
-            targetHexagon.drawHexagon();
+            drawNavHexagon(targetHexagon);
         }
         count++;
     });
+}
+
+function drawNavHexagon(hexagonToBeDrawn){
+    if (!darkmode){
+        hexagonToBeDrawn.fillColor = hexagonFillColorLight;
+        hexagonToBeDrawn.borderColor = hexagonFillColorDark;
+        hexagonToBeDrawn.drawHexagon();
+
+        const image = new Image();
+        image.src = iconsNavArrayDark[count]; // Geben Sie den Pfad zu Ihrem Bild an.
+
+        // 3. Stellen Sie sicher, dass das Bild geladen ist, bevor Sie es auf die Canvas zeichnen.
+        image.onload = function() {
+            // 4. Zeichnen Sie das Bild auf die Canvas.
+            context.drawImage(image, hexagonToBeDrawn.x - 20, hexagonToBeDrawn.y - 20, 40, 40); // (Bild, x-Koordinate, y-Koordinate)
+        };
+    }else{
+        hexagonToBeDrawn.fillColor = hexagonFillColorDark;
+        hexagonToBeDrawn.borderColor = hexagonBorderColorDark;
+        hexagonToBeDrawn.drawHexagon();
+
+        const image = new Image();
+        image.src = iconsNavArrayLight[count]; // Geben Sie den Pfad zu Ihrem Bild an.
+
+        // 3. Stellen Sie sicher, dass das Bild geladen ist, bevor Sie es auf die Canvas zeichnen.
+        image.onload = function() {
+            // 4. Zeichnen Sie das Bild auf die Canvas.
+            context.drawImage(image, hexagonToBeDrawn.x - 20, hexagonToBeDrawn.y - 20, 40, 40); // (Bild, x-Koordinate, y-Koordinate)
+        };
+    }
 }
 
 function drawSocialMediaFields() {
@@ -146,35 +148,48 @@ function drawSocialMediaFields() {
         const sourceHexagon = findHexagonByPosition(hexagoneArray, position.sourceRow, position.sourceCol);
         const targetHexagon = findHexagonByPosition(hexagoneArray, position.targetRow, position.targetCol);
 
-        if (!darkmode){
-            sourceHexagon.fillColor = hexagonFillColorLight;
-            sourceHexagon.borderColor = hexagonBorderColorLight;
-            sourceHexagon.drawHexagon();
+        if (sourceHexagon && isHexagonVisible(sourceHexagon)) {
+            drawMediaHexagon(sourceHexagon);
+            mediaHexagonPositions[count].row = position.sourceRow;
+            mediaHexagonPositions[count].col = position.sourceCol;
 
-            const image = new Image();
-            image.src = iconsMediaArrayDark[count]; // Geben Sie den Pfad zu Ihrem Bild an.
-
-            // 3. Stellen Sie sicher, dass das Bild geladen ist, bevor Sie es auf die Canvas zeichnen.
-            image.onload = function() {
-                // 4. Zeichnen Sie das Bild auf die Canvas.
-                context.drawImage(image, sourceHexagon.x - 20, sourceHexagon.y - 20, 40, 40); // (Bild, x-Koordinate, y-Koordinate)
-            };
-        }else{
-            sourceHexagon.fillColor = hexagonFillColorDark;
-            sourceHexagon.borderColor = hexagonBorderColorDark;
-            sourceHexagon.drawHexagon();
-
-            const image = new Image();
-            image.src = iconsMediaArrayLight[count]; // Geben Sie den Pfad zu Ihrem Bild an.
-
-            // 3. Stellen Sie sicher, dass das Bild geladen ist, bevor Sie es auf die Canvas zeichnen.
-            image.onload = function() {
-                // 4. Zeichnen Sie das Bild auf die Canvas.
-                context.drawImage(image, sourceHexagon.x - 20, sourceHexagon.y - 20, 40, 40); // (Bild, x-Koordinate, y-Koordinate)
-            };
+        } else if (targetHexagon && isHexagonVisible(targetHexagon)) {
+            drawMediaHexagon(targetHexagon);
+            mediaHexagonPositions[count].row = position.targetRow;
+            mediaHexagonPositions[count].col = position.targetCol;
         }
+
         count++;
     });
+}
+function drawMediaHexagon(hexagonToBeDrawn){
+    if (!darkmode){
+        hexagonToBeDrawn.fillColor = hexagonFillColorLight;
+        hexagonToBeDrawn.borderColor = hexagonBorderColorLight;
+        hexagonToBeDrawn.drawHexagon();
+
+        const image = new Image();
+        image.src = iconsMediaArrayDark[count]; // Geben Sie den Pfad zu Ihrem Bild an.
+
+        // 3. Stellen Sie sicher, dass das Bild geladen ist, bevor Sie es auf die Canvas zeichnen.
+        image.onload = function() {
+            // 4. Zeichnen Sie das Bild auf die Canvas.
+            context.drawImage(image, hexagonToBeDrawn.x - 20, hexagonToBeDrawn.y - 20, 40, 40); // (Bild, x-Koordinate, y-Koordinate)
+        };
+    }else{
+        hexagonToBeDrawn.fillColor = hexagonFillColorDark;
+        hexagonToBeDrawn.borderColor = hexagonBorderColorDark;
+        hexagonToBeDrawn.drawHexagon();
+
+        const image = new Image();
+        image.src = iconsMediaArrayLight[count]; // Geben Sie den Pfad zu Ihrem Bild an.
+
+        // 3. Stellen Sie sicher, dass das Bild geladen ist, bevor Sie es auf die Canvas zeichnen.
+        image.onload = function() {
+            // 4. Zeichnen Sie das Bild auf die Canvas.
+            context.drawImage(image, hexagonToBeDrawn.x - 20, hexagonToBeDrawn.y - 20, 40, 40); // (Bild, x-Koordinate, y-Koordinate)
+        };
+    }
 }
 
 function drawHexagons() {
@@ -237,10 +252,15 @@ function findHexagonByPosition(hexagoneArray, row, col) {
 
 function isHexagonVisible(hexagon) {
     // Überprüfen, ob das Hexagon innerhalb der sichtbaren Canvas-Fläche ist
+    let space = size;
     return (
-        hexagon.x + size >= 0 &&
-        hexagon.x - size <= canvas.width &&
-        hexagon.y + size >= 0 &&
-        hexagon.y - size <= canvas.height
+        hexagon.x + space >= 0 &&
+        hexagon.x - space <= canvas.width - 100 &&
+        hexagon.y + space >= 0 &&
+        hexagon.y - space <= canvas.height -100 &&
+        hexagon.x + space >= 100 &&
+        hexagon.x - space <= canvas.width &&
+        hexagon.y + space >= 100 &&
+        hexagon.y - space <= canvas.height
     );
 }

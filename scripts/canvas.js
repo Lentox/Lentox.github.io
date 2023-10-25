@@ -1,20 +1,24 @@
 // canvas.js
 let canvas;
 let context;
+let offScreenCanvas;
+let offScreenContext;
 
 function initCanvas() {
     canvas = document.getElementById("hexagonCanvas");
     context = canvas.getContext("2d");
 
-    // Event-Listener für Klicks auf das Canvas
+    // Create an off-screen canvas
+    offScreenCanvas = document.createElement("canvas");
+    offScreenContext = offScreenCanvas.getContext("2d");
+
+    // Event listeners for clicks and window resize
     canvas.addEventListener("click", handleCanvasClick);
     canvas.addEventListener("mouseenter", handleCanvasEnter);
     canvas.addEventListener("mouseleave", handleCanvasLeave);
-
-    // Bei Änderungen der Fenstergröße, Canvas neu zeichnen
     window.addEventListener('resize', resizeCanvas);
 
-    // Initial der Canvas erstellen
+    // Initialize the canvas
     resizeCanvas();
 }
 
@@ -22,15 +26,26 @@ function resizeCanvas() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
-    // Zeichne der Background Hexagone
+    // Draw on the off-screen canvas
+    offScreenCanvas.width = canvas.width;
+    offScreenCanvas.height = canvas.height;
+    drawOnOffScreenCanvas();
+
+    // Copy the off-screen canvas to the visible canvas
+    context.drawImage(offScreenCanvas, 0, 0);
+}
+
+// Zeichnen der offScreenCanvas um flackern beim resize zu vermeiden
+function drawOnOffScreenCanvas() {
+    // Draw the background Hexagons on the off-screen canvas
     drawHexagons();
-    // Zeichnen der SocialMediaFields
+    // Draw the SocialMediaFields on the off-screen canvas
     drawSocialMediaFields();
-    // Zeichnen der NavBarFields
+    // Draw the NavBarFields on the off-screen canvas
     drawNavFields();
-    // Zeichnen der Digital-Clock
+    // Draw the Digital-Clock on the off-screen canvas
     digitalClock();
-    // Zeichnen des modeSliders
+    // Draw the modeSlider on the off-screen canvas
     modeSlider();
 }
 
@@ -45,7 +60,7 @@ function handleCanvasClick(event) {
         const dx = event.offsetX - x;
         const dy = event.offsetY - y;
         // Klick, auf DarkmodeButton
-        if (hexagoneArray[i].row === 13 && hexagoneArray[i].col === 14){
+        if (hexagoneArray[i].row === modeHexagonPosition.row && hexagoneArray[i].col === modeHexagonPosition.col){
             // Überprüfen, ob der Mausklick auf das Hexagon zeigt
             const distance = Math.sqrt(dx * dx + dy * dy);
 
