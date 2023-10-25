@@ -193,7 +193,6 @@ function drawMediaHexagon(hexagonToBeDrawn){
 }
 
 function drawHexagons() {
-
     let hexagonRadius = 40;
     let centerX = canvas.width / 2;
     let centerY = canvas.height / 2;
@@ -202,37 +201,33 @@ function drawHexagons() {
     let borderColor;
     let textColor = "white";
 
-    if (darkmode){
+    if (darkmode) {
         fillColor = hexagonFillColorLight;
         borderColor = hexagonBorderColorLight;
-    }else{
+    } else {
         fillColor = hexagonFillColorDark;
         borderColor = hexagonBorderColorDark;
     }
 
-    let numRows = Math.floor((canvas.height - hexagonRadius) / (hexagonRadius * 1.5));
-    let numCols = Math.floor((canvas.width - hexagonRadius) / (hexagonRadius * 1.5));
+    // Calculate the number of rows and columns based on a larger region of the canvas
+    let numRows = Math.floor((canvas.height * 1.5 - hexagonRadius) / (hexagonRadius * 1.5));
+    let numCols = Math.floor((canvas.width * 1.5 - hexagonRadius) / (hexagonRadius * 1.5));
 
-    // Anpassung des Versatzes in Y-Richtung, um Hexagone sowohl unter als auch über dem mittleren Hexagon zu zeichnen
+    // Anpassung des Versatzes in Y-Richtung
     let yOffset = hexagonRadius * 1.75;
-    // Anpassung des Versatzes in X-Richtung, um Hexagone sowohl rechts als auch links neben dem mittleren Hexagon zu zeichnen
     let xOffset = hexagonRadius * 1.5;
 
-    // Anpassung des Y-Offsets für die Reihen links und rechts daneben
     let yRowOffset = hexagonRadius * 0.85;
-
-    // Wählen Sie die Verschiebungsrichtung (1 für nach unten, -1 für nach oben)
     let direction = 1;
 
-    // Löschen, der bestehenden Hexagon Elemente
+    // Löschen der bestehenden Hexagon-Elemente
     hexagoneArray = [];
 
     for (let col = -numCols; col <= numCols; col++) {
-        for (let row = 0; row <= numRows; row++) {
-            let yAbove = centerY - row * yOffset - direction * col * yRowOffset; // Y-Position des Hexagons über dem mittleren
-            let yBelow = centerY + row * yOffset - direction * col * yRowOffset; // Y-Position des Hexagons unter dem mittleren
-
-            let x = centerX + col * xOffset; // Hier verwenden wir den Spaltenindex für die Verschiebung
+        for (let row = -numRows; row <= numRows; row++) {
+            let yAbove = centerY - row * yOffset - direction * col * yRowOffset;
+            let yBelow = centerY + row * yOffset - direction * col * yRowOffset;
+            let x = centerX + col * xOffset;
 
             let hexAbove = new Hexagon(x, yAbove, -row, col, fillColor, borderColor, textColor);
             hexAbove.drawHexagon();
@@ -245,6 +240,9 @@ function drawHexagons() {
         }
     }
 }
+
+
+
 
 function findHexagonByPosition(hexagoneArray, row, col) {
     return hexagoneArray.find(hexagon => hexagon.row === row && hexagon.col === col);

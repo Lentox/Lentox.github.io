@@ -54,25 +54,26 @@ function handleCanvasClick(event) {
     let x = 0;
     let y = 0;
 
+    let conditionMet = false;
+
     for (let i = 0; i < hexagoneArray.length; i++) {
         x = hexagoneArray[i].x;
         y = hexagoneArray[i].y;
         const dx = event.offsetX - x;
         const dy = event.offsetY - y;
-        // Klick, auf DarkmodeButton
-        if (hexagoneArray[i].row === modeHexagonPosition.row && hexagoneArray[i].col === modeHexagonPosition.col){
-            // Überprüfen, ob der Mausklick auf das Hexagon zeigt
-            const distance = Math.sqrt(dx * dx + dy * dy);
 
-            if (distance <= 40) {
-                // Der Klick war innerhalb des Hexagons
+        // Klick, auf DarkmodeButton
+        if (hexagoneArray[i].row === modeHexagonPosition.row && hexagoneArray[i].col === modeHexagonPosition.col) {
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            if (distance <= 40 && !conditionMet) {
+                conditionMet = true; // Preventing the code to run multiple times
                 darkmode = !darkmode;
                 counter = 0;
                 resizeCanvas();
             }
         }
         // Klick, auf Github Button
-        if (hexagoneArray[i].row === 6 && hexagoneArray[i].col === 0){
+        if (hexagoneArray[i].row === mediaHexagonPositions[0].row && hexagoneArray[i].col === mediaHexagonPositions[0].col){
             // Überprüfen, ob der Mausklick auf das Hexagon zeigt
             const distance = Math.sqrt(dx * dx + dy * dy);
             if (distance <= 40) {
@@ -81,7 +82,7 @@ function handleCanvasClick(event) {
             }
         }
         // Klick, auf LinkedIn Button
-        if (hexagoneArray[i].row === 5 && hexagoneArray[i].col === -2){
+        if (hexagoneArray[i].row === mediaHexagonPositions[1].row && hexagoneArray[i].col === mediaHexagonPositions[1].col){
             // Überprüfen, ob der Mausklick auf das Hexagon zeigt
             const distance = Math.sqrt(dx * dx + dy * dy);
             if (distance <= 40) {
@@ -90,7 +91,7 @@ function handleCanvasClick(event) {
             }
         }
         // Klick, auf Instagram Button
-        if (hexagoneArray[i].row === 7 && hexagoneArray[i].col === 2){
+        if (hexagoneArray[i].row === mediaHexagonPositions[2].row && hexagoneArray[i].col === mediaHexagonPositions[2].col){
             // Überprüfen, ob der Mausklick auf das Hexagon zeigt
             const distance = Math.sqrt(dx * dx + dy * dy);
             if (distance <= 40) {
